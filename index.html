@@ -33,7 +33,7 @@
 
       --text-primary: #ffffff;
       --text-secondary: #a1a1aa;
-      --text-muted: #71717a;
+      --text-muted: #8b8b95;
 
       --accent-volt: #c1f429;
       --accent-volt-hover: #aedf1b;
@@ -106,7 +106,7 @@
 
       --text-primary: #09090b;
       --text-secondary: #52525b;
-      --text-muted: #71717a;
+      --text-muted: #63636b;
 
       --accent-volt: #c1f429;
       --accent-volt-hover: #aedf1b;
@@ -120,7 +120,7 @@
       --mint-bg: rgba(4, 120, 87, 0.10);
       --mint-border: rgba(4, 120, 87, 0.24);
 
-      --amber: #b45309;
+      --amber: #92400e;
       --amber-bg: rgba(180, 83, 9, 0.10);
       --amber-border: rgba(180, 83, 9, 0.24);
 
@@ -297,7 +297,9 @@
       align-items: center;
       text-decoration: none;
       flex-shrink: 0;
-      padding: 6px 0;
+      min-height: 44px;
+      min-width: 44px;
+      padding: 8px 0;
     }
 
     .brand-svg {
@@ -315,13 +317,17 @@
     .nav-links {
       display: none;
       align-items: center;
-      gap: 26px;
+      gap: 14px;
       list-style: none;
       margin: 0;
       padding: 0;
     }
 
     .nav-links a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 8px;
       font-size: 0.9375rem;
       font-weight: 500;
       color: var(--text-secondary);
@@ -487,6 +493,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      width: fit-content;
       min-height: 26px;
       padding: 3px 10px;
       border-radius: var(--radius-pill);
@@ -755,6 +762,14 @@
       font-size: var(--text-xs);
       color: var(--text-secondary);
       max-width: 62ch;
+    }
+
+    .cockpit-card-sub.has-top-gap {
+      margin-top: 12px;
+    }
+
+    .cockpit-card-sub.has-bottom-gap {
+      margin-bottom: 14px;
     }
 
     .class-list {
@@ -1482,6 +1497,7 @@
       display: grid;
       grid-template-columns: 1fr;
       gap: 16px;
+      margin-top: 32px;
     }
 
     @media (min-width: 860px) {
@@ -1572,6 +1588,10 @@
         padding: 40px;
         gap: 40px;
       }
+    }
+
+    .demo-layout .section-lead {
+      margin-bottom: 24px;
     }
 
     .form-grid {
@@ -1734,10 +1754,14 @@
       }
     }
 
+    .site-footer .brand-svg {
+      height: 24px;
+    }
+
     .footer-links {
       display: flex;
       flex-wrap: wrap;
-      gap: 20px;
+      gap: 12px;
       font-size: 0.875rem;
       color: var(--text-secondary);
     }
@@ -1745,8 +1769,11 @@
     .footer-links a {
       text-decoration: none;
       min-height: 44px;
+      min-width: 44px;
+      padding: 0 8px;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
     }
 
     .footer-links a:hover {
@@ -1800,7 +1827,6 @@
           type="button"
           class="theme-toggle-btn"
           id="theme-toggle"
-          aria-pressed="false"
           aria-label="Cambiar a modo claro"
           title="Cambiar entre modo oscuro y modo claro"
         >
@@ -1988,7 +2014,7 @@
                       <strong id="sofia-booking-status">Habilitada (2 créditos libres)</strong>
                     </div>
                   </div>
-                  <p class="cockpit-card-sub" style="margin-top: 12px;">
+                  <p class="cockpit-card-sub has-top-gap">
                     El saldo figura en Caja para cobrarlo en mostrador, sin trabar el ingreso del atleta a&nbsp;entrenar.
                   </p>
                 </div>
@@ -2096,7 +2122,7 @@
 
                 <div class="cockpit-card">
                   <div class="cockpit-card-title">Autogestión simple desde el celular</div>
-                  <p class="cockpit-card-sub" style="margin-bottom: 14px;">Sin mensajes de WhatsApp ni esperar que alguien responda en&nbsp;mostrador.</p>
+                  <p class="cockpit-card-sub has-bottom-gap">Sin mensajes de WhatsApp ni esperar que alguien responda en&nbsp;mostrador.</p>
                   <ul class="check-list">
                     <li>
                       <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
@@ -2289,12 +2315,12 @@
                 </div>
                 <div class="timeline-row">
                   <div class="timeline-block">
-                    <span class="badge badge-mint" style="width: fit-content;">Vigente</span>
+                    <span class="badge badge-mint">Vigente</span>
                     <strong class="tabular-nums">01/11 – 30/11</strong>
                     <span class="ops-action-msg">Plan 3x/sem · +1 crédito extra</span>
                   </div>
                   <div class="timeline-block is-future" id="ops-future-block">
-                    <span class="badge badge-amber" style="width: fit-content;" id="ops-future-tag">Renovación encadenada</span>
+                    <span class="badge badge-amber" id="ops-future-tag">Renovación encadenada</span>
                     <strong class="tabular-nums">01/12 – 31/12</strong>
                     <span class="ops-action-msg">Sin superposición de fechas</span>
                   </div>
@@ -2584,7 +2610,7 @@
           </article>
         </div>
 
-        <div class="scope-split" style="margin-top: 32px;">
+        <div class="scope-split">
           <div class="panel-surface">
             <h3 class="panel-heading">
               Qué queda resuelto desde el día uno
@@ -2700,7 +2726,7 @@
         <div class="demo-layout">
           <div>
             <h2 id="demo-heading" class="section-title">Probá Centris con la grilla real de tu box.</h2>
-            <p class="section-lead" style="margin-bottom: 24px;">
+            <p class="section-lead">
               Contanos cómo organizás hoy tus clases y membresías. Coordinamos una demostración de <span class="tabular-nums">20 minutos</span> para mostrarte el flujo completo de administrador, recepción, coach y atleta.
             </p>
             <ul class="check-list">
@@ -2770,7 +2796,7 @@
     <div class="container footer-inner">
       <div>
         <a href="#top" class="brand-link" aria-label="Volver arriba — Centris">
-          <svg class="brand-svg" style="height: 24px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 256" width="940" height="256" role="img" aria-labelledby="title-centris-footer">
+          <svg class="brand-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 256" width="940" height="256" role="img" aria-labelledby="title-centris-footer">
             <title id="title-centris-footer">Centris</title>
             <g>
               <path class="logo-ink" d="M 37.94 180.00 A 104 104 0 0 1 180.00 37.94 L 158.00 76.04 A 60 60 0 0 0 76.04 158.00 Z"/>
@@ -2820,7 +2846,6 @@
         const metaTheme = document.getElementById("meta-theme-color");
         if (metaTheme) metaTheme.setAttribute("content", isLight ? "#F4F4F5" : "#09090B");
         if (themeBtn) {
-          themeBtn.setAttribute("aria-pressed", String(isLight));
           themeBtn.setAttribute("aria-label", isLight ? "Cambiar a modo oscuro" : "Cambiar a modo claro");
         }
         if (themeLabel) themeLabel.textContent = isLight ? "Modo oscuro" : "Modo claro";
