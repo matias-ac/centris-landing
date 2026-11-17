@@ -192,6 +192,29 @@
       border: 0;
     }
 
+    .skip-link {
+      position: fixed;
+      top: 12px;
+      left: 16px;
+      z-index: 100;
+      padding: 10px 16px;
+      border-radius: var(--radius-pill);
+      background: var(--accent-volt);
+      color: var(--text-on-volt);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-decoration: none;
+      transform: translateY(-160%);
+      transition: transform 150ms var(--ease-out-expo);
+    }
+
+    .skip-link:focus,
+    .skip-link:focus-visible {
+      transform: translateY(0);
+      outline: 2px solid var(--text-primary);
+      outline-offset: 2px;
+    }
+
     .container {
       width: 100%;
       max-width: 1240px;
@@ -728,12 +751,14 @@
       font-weight: 600;
       font-size: 0.9375rem;
       color: var(--text-primary);
+      overflow-wrap: break-word;
     }
 
     .class-meta-coach {
       font-size: 0.8125rem;
       color: var(--text-secondary);
       margin-top: 2px;
+      overflow-wrap: break-word;
     }
 
     .class-right {
@@ -1592,10 +1617,46 @@
       border: 1px solid var(--mint-border);
       color: var(--text-primary);
       font-size: 0.9375rem;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      display: grid;
+      gap: 12px;
     }
 
     .form-feedback[hidden] {
       display: none;
+    }
+
+    .form-feedback-summary {
+      margin: 0;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: var(--bg-inset);
+      border: 1px solid var(--border-subtle);
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+      font-family: var(--font-sans);
+    }
+
+    .form-feedback-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ops-action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      padding-top: 4px;
+    }
+
+    .ops-action-msg {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
     }
 
     /* ---------------- Footer ---------------- */
@@ -1646,6 +1707,7 @@
   </style>
 </head>
 <body>
+  <a href="#top" class="skip-link">Saltar al contenido principal</a>
 
   <header class="site-header">
     <div class="container nav-inner">
@@ -1767,13 +1829,13 @@
               <span class="cockpit-tz tabular-nums">Hora local · Buenos Aires (GMT-3)</span>
             </div>
             <div class="cockpit-tabs" role="tablist" aria-label="Pantallas operativas de ejemplo">
-              <button type="button" class="cockpit-tab" role="tab" aria-selected="true" aria-controls="panel-clases" id="tab-clases">
+              <button type="button" class="cockpit-tab" role="tab" aria-selected="true" tabindex="0" aria-controls="panel-clases" id="tab-clases">
                 Clases y cupos
               </button>
-              <button type="button" class="cockpit-tab" role="tab" aria-selected="false" aria-controls="panel-caja" id="tab-caja">
+              <button type="button" class="cockpit-tab" role="tab" aria-selected="false" tabindex="-1" aria-controls="panel-caja" id="tab-caja">
                 Caja y morosos
               </button>
-              <button type="button" class="cockpit-tab" role="tab" aria-selected="false" aria-controls="panel-atleta" id="tab-atleta">
+              <button type="button" class="cockpit-tab" role="tab" aria-selected="false" tabindex="-1" aria-controls="panel-atleta" id="tab-atleta">
                 Celular del atleta
               </button>
             </div>
@@ -2078,11 +2140,11 @@
         </div>
 
         <div class="ops-controls-bar">
-          <div class="ops-rail" role="tablist" aria-label="Pilares operativos de Centris">
-            <button type="button" class="ops-pillar-btn" role="tab" aria-selected="true" data-ops-index="0">Horarios y clases</button>
-            <button type="button" class="ops-pillar-btn" role="tab" aria-selected="false" data-ops-index="1">Membresías y vigencias</button>
-            <button type="button" class="ops-pillar-btn" role="tab" aria-selected="false" data-ops-index="2">Asistencia en piso</button>
-            <button type="button" class="ops-pillar-btn" role="tab" aria-selected="false" data-ops-index="3">Caja y morosos</button>
+          <div class="ops-rail" id="ops-rail" role="tablist" aria-label="Pilares operativos de Centris">
+            <button type="button" class="ops-pillar-btn" role="tab" id="ops-tab-0" aria-controls="ops-panel-0" aria-selected="true" tabindex="0" data-ops-index="0">Horarios y clases</button>
+            <button type="button" class="ops-pillar-btn" role="tab" id="ops-tab-1" aria-controls="ops-panel-1" aria-selected="false" tabindex="-1" data-ops-index="1">Membresías y vigencias</button>
+            <button type="button" class="ops-pillar-btn" role="tab" id="ops-tab-2" aria-controls="ops-panel-2" aria-selected="false" tabindex="-1" data-ops-index="2">Asistencia en piso</button>
+            <button type="button" class="ops-pillar-btn" role="tab" id="ops-tab-3" aria-controls="ops-panel-3" aria-selected="false" tabindex="-1" data-ops-index="3">Caja y morosos</button>
           </div>
 
           <div class="ops-nav-arrows">
@@ -2099,7 +2161,7 @@
         <div class="ops-viewport" aria-live="polite">
           <div class="ops-track" id="ops-track">
             <!-- Slide 1: Horarios y clases -->
-            <article class="ops-slide" role="tabpanel" aria-label="Horarios y clases">
+            <article class="ops-slide" id="ops-panel-0" role="tabpanel" aria-labelledby="ops-tab-0">
               <div>
                 <h3 class="ops-slide-title">Horarios recurrentes y clases editables sin romper la semana</h3>
                 <p class="ops-slide-lead">
@@ -2136,15 +2198,15 @@
                     <strong class="tabular-nums">120 min antes</strong>
                   </div>
                 </div>
-                <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+                <div class="ops-action-row">
                   <button type="button" class="sim-action-btn" id="ops-suspend-btn">Simular suspensión de clase</button>
-                  <span style="font-size: 0.8125rem; color: var(--text-secondary);" id="ops-suspend-msg">14 atletas anotados con crédito consumido.</span>
+                  <span class="ops-action-msg" id="ops-suspend-msg" role="status" aria-live="polite">14 atletas anotados con crédito consumido.</span>
                 </div>
               </div>
             </article>
 
             <!-- Slide 2: Membresías y vigencias -->
-            <article class="ops-slide" role="tabpanel" aria-label="Membresías y vigencias">
+            <article class="ops-slide" id="ops-panel-1" role="tabpanel" aria-labelledby="ops-tab-1" aria-hidden="true" inert>
               <div>
                 <h3 class="ops-slide-title">Membresías encadenadas sin huecos ni solapamientos</h3>
                 <p class="ops-slide-lead">
@@ -2175,23 +2237,23 @@
                   <div class="timeline-block">
                     <span class="badge badge-mint" style="width: fit-content;">Vigente</span>
                     <strong class="tabular-nums">01/11 – 30/11</strong>
-                    <span style="font-size: 0.8125rem; color: var(--text-secondary);">Plan 3x/sem · +1 crédito extra</span>
+                    <span class="ops-action-msg">Plan 3x/sem · +1 crédito extra</span>
                   </div>
                   <div class="timeline-block is-future" id="ops-future-block">
                     <span class="badge badge-amber" style="width: fit-content;" id="ops-future-tag">Renovación encadenada</span>
                     <strong class="tabular-nums">01/12 – 31/12</strong>
-                    <span style="font-size: 0.8125rem; color: var(--text-secondary);">Sin superposición de fechas</span>
+                    <span class="ops-action-msg">Sin superposición de fechas</span>
                   </div>
                 </div>
-                <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+                <div class="ops-action-row">
                   <button type="button" class="sim-action-btn" id="ops-baja-btn">Simular baja anticipada</button>
-                  <span style="font-size: 0.8125rem; color: var(--text-secondary);" id="ops-baja-msg">Las reservas posteriores se cancelan y liberan cupo al instante.</span>
+                  <span class="ops-action-msg" id="ops-baja-msg" role="status" aria-live="polite">Las reservas posteriores se cancelan y liberan cupo al instante.</span>
                 </div>
               </div>
             </article>
 
             <!-- Slide 3: Asistencia en piso -->
-            <article class="ops-slide" role="tabpanel" aria-label="Asistencia en piso">
+            <article class="ops-slide" id="ops-panel-2" role="tabpanel" aria-labelledby="ops-tab-2" aria-hidden="true" inert>
               <div>
                 <h3 class="ops-slide-title">Lista en piso en un toque y 24 horas para corregir</h3>
                 <p class="ops-slide-lead">
@@ -2221,22 +2283,25 @@
                 <div class="coach-row">
                   <span><strong>Lucía Ferreyra</strong></span>
                   <div class="coach-toggle-group">
-                    <button type="button" class="att-btn" data-att-row="1" data-state="presente" aria-pressed="true">Presente</button>
-                    <button type="button" class="att-btn" data-att-row="1" data-state="ausente" aria-pressed="false">Ausente</button>
+                    <button type="button" class="att-btn" data-att-row="1" data-athlete="Lucía Ferreyra" data-state="presente" aria-pressed="true">Presente</button>
+                    <button type="button" class="att-btn" data-att-row="1" data-athlete="Lucía Ferreyra" data-state="ausente" aria-pressed="false">Ausente</button>
                   </div>
                 </div>
                 <div class="coach-row">
                   <span><strong>Tomás Benítez</strong></span>
                   <div class="coach-toggle-group">
-                    <button type="button" class="att-btn" data-att-row="2" data-state="presente" aria-pressed="false">Presente</button>
-                    <button type="button" class="att-btn" data-att-row="2" data-state="ausente" aria-pressed="true">Ausente</button>
+                    <button type="button" class="att-btn" data-att-row="2" data-athlete="Tomás Benítez" data-state="presente" aria-pressed="false">Presente</button>
+                    <button type="button" class="att-btn" data-att-row="2" data-athlete="Tomás Benítez" data-state="ausente" aria-pressed="true">Ausente</button>
                   </div>
+                </div>
+                <div class="ops-action-row">
+                  <span class="ops-action-msg" id="ops-att-msg" role="status" aria-live="polite">Marcá presente o ausente para probar la planilla móvil del coach (sin datos de caja).</span>
                 </div>
               </div>
             </article>
 
             <!-- Slide 4: Caja y morosos -->
-            <article class="ops-slide" role="tabpanel" aria-label="Caja y morosos">
+            <article class="ops-slide" id="ops-panel-3" role="tabpanel" aria-labelledby="ops-tab-3" aria-hidden="true" inert>
               <div>
                 <h3 class="ops-slide-title">Caja inmutable, saldos parciales y cero borrados silenciosos</h3>
                 <p class="ops-slide-lead">
@@ -2261,21 +2326,25 @@
               <div class="ops-proof-box">
                 <div class="ops-proof-head">
                   <span class="ops-proof-title">Rastro contable · Membresía #408</span>
-                  <span class="badge badge-mint tabular-nums">Saldo actual: $ 0</span>
+                  <span class="badge badge-mint tabular-nums" id="ops-ledger-badge">Saldo actual: $ 0</span>
                 </div>
-                <div class="audit-step is-voided">
+                <div class="audit-step" id="ops-audit-row-1">
                   <div>
                     <strong class="tabular-nums">#1041 · $ 48.000</strong>
-                    <div style="font-size: 0.75rem; color: var(--text-secondary);">Motivo anulación: "Importe duplicado"</div>
+                    <div class="ops-action-msg" id="ops-audit-sub-1">Efectivo · Cargado por error en mostrador</div>
                   </div>
-                  <span class="badge badge-coral">Anulado (Admin)</span>
+                  <span class="badge badge-mint" id="ops-audit-tag-1">Firme</span>
                 </div>
-                <div class="audit-step">
+                <div class="audit-step" id="ops-audit-row-2" hidden>
                   <div>
                     <strong class="tabular-nums">#1042 · $ 48.000</strong>
-                    <div style="font-size: 0.75rem; color: var(--text-secondary);">Transferencia · Cargado por Recepción</div>
+                    <div class="ops-action-msg">Transferencia · Cobro real registrado</div>
                   </div>
                   <span class="badge badge-mint">Firme</span>
+                </div>
+                <div class="ops-action-row">
+                  <button type="button" class="sim-action-btn" id="ops-audit-btn">Simular anulación con motivo</button>
+                  <span class="ops-action-msg" id="ops-audit-msg" role="status" aria-live="polite">Los cobros no se borran: probá cómo corrige un error un Administrador.</span>
                 </div>
               </div>
             </article>
@@ -2600,21 +2669,21 @@
             <div class="form-grid-2">
               <div class="field">
                 <label for="box-name">Nombre de tu box o centro</label>
-                <input id="box-name" name="boxName" type="text" placeholder="Ej. Box Norte Funcional" required autocomplete="organization" />
-                <span class="field-error" id="err-box-name" aria-live="polite"></span>
+                <input id="box-name" name="boxName" type="text" maxlength="80" placeholder="Ej. Box Norte Funcional" required autocomplete="organization" aria-describedby="err-box-name" />
+                <span class="field-error" id="err-box-name" role="alert" aria-live="polite"></span>
               </div>
               <div class="field">
                 <label for="contact-name">Tu nombre</label>
-                <input id="contact-name" name="contactName" type="text" placeholder="Ej. Matías López" required autocomplete="name" />
-                <span class="field-error" id="err-contact-name" aria-live="polite"></span>
+                <input id="contact-name" name="contactName" type="text" maxlength="80" placeholder="Ej. Matías López" required autocomplete="name" aria-describedby="err-contact-name" />
+                <span class="field-error" id="err-contact-name" role="alert" aria-live="polite"></span>
               </div>
             </div>
 
             <div class="form-grid-2">
               <div class="field">
                 <label for="contact-channel">Email o WhatsApp</label>
-                <input id="contact-channel" name="contactChannel" type="text" placeholder="Ej. hola@tubox.com o +54 9 11..." required />
-                <span class="field-error" id="err-contact-channel" aria-live="polite"></span>
+                <input id="contact-channel" name="contactChannel" type="text" maxlength="120" placeholder="Ej. hola@tubox.com o +54 9 11..." required autocomplete="email" aria-describedby="err-contact-channel" />
+                <span class="field-error" id="err-contact-channel" role="alert" aria-live="polite"></span>
               </div>
               <div class="field">
                 <label for="athlete-count">Cantidad aproximada de atletas</label>
@@ -2628,12 +2697,12 @@
 
             <div class="field">
               <label for="main-need">¿Qué querés ordenar primero?</label>
-              <textarea id="main-need" name="mainNeed" placeholder="Ej. Reservas por WhatsApp, control de asistencia de coaches y seguimiento de pagos parciales..."></textarea>
+              <textarea id="main-need" name="mainNeed" maxlength="500" placeholder="Ej. Reservas por WhatsApp, control de asistencia de coaches y seguimiento de pagos parciales..."></textarea>
             </div>
 
-            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 14px;">
-              <button type="submit" class="btn btn-volt">Solicitar demo</button>
-              <span style="font-size: 0.8125rem; color: var(--text-secondary);">Versión inicial de demostración · envío simulado localmente.</span>
+            <div class="ops-action-row">
+              <button type="submit" class="btn btn-volt" id="demo-submit-btn">Solicitar demo</button>
+              <span class="ops-action-msg">Modo demostración local · genera un resumen listo para copiar sin enviar datos a terceros.</span>
             </div>
 
             <div class="form-feedback" id="form-feedback" role="status" aria-live="polite" hidden></div>
@@ -2721,9 +2790,18 @@
         });
       }
 
-      // 1. Mobile navigation drawer
+      // 1. Mobile navigation drawer (with Escape key, outside click, and desktop breakpoint reset)
       const menuBtn = document.getElementById("mobile-menu-toggle");
       const drawer = document.getElementById("mobile-drawer");
+      const siteHeader = document.querySelector(".site-header");
+
+      function closeMobileDrawer(restoreFocus) {
+        if (!menuBtn || !drawer || drawer.hidden) return;
+        menuBtn.setAttribute("aria-expanded", "false");
+        drawer.hidden = true;
+        if (restoreFocus) menuBtn.focus();
+      }
+
       if (menuBtn && drawer) {
         menuBtn.addEventListener("click", function () {
           const isOpen = menuBtn.getAttribute("aria-expanded") === "true";
@@ -2732,8 +2810,40 @@
         });
         drawer.querySelectorAll("a").forEach(function (link) {
           link.addEventListener("click", function () {
-            menuBtn.setAttribute("aria-expanded", "false");
-            drawer.hidden = true;
+            closeMobileDrawer(false);
+          });
+        });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && !drawer.hidden) {
+            closeMobileDrawer(true);
+          }
+        });
+        document.addEventListener("click", function (e) {
+          if (!drawer.hidden && siteHeader && !siteHeader.contains(e.target)) {
+            closeMobileDrawer(false);
+          }
+        });
+        if (window.matchMedia) {
+          window.matchMedia("(min-width: 1024px)").addEventListener("change", function (e) {
+            if (e.matches) closeMobileDrawer(false);
+          });
+        }
+      }
+
+      // Helper: WAI-ARIA Tablist roving tabindex and keyboard navigation (ArrowLeft/ArrowRight/Home/End)
+      function bindTablistKeyboard(tabNodeList, activateAtIndex) {
+        const tabs = Array.prototype.slice.call(tabNodeList);
+        tabs.forEach(function (tab, idx) {
+          tab.addEventListener("keydown", function (e) {
+            let nextIdx = null;
+            if (e.key === "ArrowRight") nextIdx = (idx + 1) % tabs.length;
+            else if (e.key === "ArrowLeft") nextIdx = (idx - 1 + tabs.length) % tabs.length;
+            else if (e.key === "Home") nextIdx = 0;
+            else if (e.key === "End") nextIdx = tabs.length - 1;
+            if (nextIdx !== null) {
+              e.preventDefault();
+              activateAtIndex(nextIdx, true);
+            }
           });
         });
       }
@@ -2741,16 +2851,30 @@
       // 2. Hero cockpit tabs
       const cockpitTabs = document.querySelectorAll(".cockpit-tab");
       const cockpitPanels = document.querySelectorAll(".cockpit-panel");
-      cockpitTabs.forEach(function (tab) {
+
+      function activateCockpitTab(idx, moveFocus) {
+        const total = cockpitTabs.length;
+        if (!total) return;
+        const activeIdx = (idx + total) % total;
+        cockpitTabs.forEach(function (t, i) {
+          const isSelected = i === activeIdx;
+          t.setAttribute("aria-selected", String(isSelected));
+          t.setAttribute("tabindex", isSelected ? "0" : "-1");
+          if (isSelected && moveFocus) t.focus();
+        });
+        const activeTab = cockpitTabs[activeIdx];
+        const targetId = activeTab ? activeTab.getAttribute("aria-controls") : null;
+        cockpitPanels.forEach(function (p) {
+          p.hidden = p.id !== targetId;
+        });
+      }
+
+      cockpitTabs.forEach(function (tab, idx) {
         tab.addEventListener("click", function () {
-          const targetId = tab.getAttribute("aria-controls");
-          cockpitTabs.forEach(function (t) { t.setAttribute("aria-selected", "false"); });
-          cockpitPanels.forEach(function (p) { p.hidden = true; });
-          tab.setAttribute("aria-selected", "true");
-          const target = document.getElementById(targetId);
-          if (target) target.hidden = false;
+          activateCockpitTab(idx, false);
         });
       });
+      bindTablistKeyboard(cockpitTabs, activateCockpitTab);
 
       // 3. Interactive capacity simulation in Clases panel (connected to Sofía Peralta's desk summary)
       const simFeedback = document.getElementById("sim-feedback");
@@ -2860,32 +2984,55 @@
       }
 
       // 5. #operacion Horizontal Slider + Interactive Rule Demos
+      const opsRail = document.getElementById("ops-rail");
       const opsTrack = document.getElementById("ops-track");
       const opsPillarBtns = document.querySelectorAll(".ops-pillar-btn");
+      const opsSlides = document.querySelectorAll(".ops-slide");
       const opsPrev = document.getElementById("ops-prev");
       const opsNext = document.getElementById("ops-next");
       const opsCounter = document.getElementById("ops-counter");
       let currentOps = 0;
       const totalOps = opsPillarBtns.length;
 
-      function setOpsSlide(idx) {
+      function setOpsSlide(idx, moveFocus) {
         currentOps = (idx + totalOps) % totalOps;
         if (opsTrack) {
           opsTrack.style.transform = "translateX(-" + (currentOps * 100) + "%)";
         }
         opsPillarBtns.forEach(function (b, i) {
-          b.setAttribute("aria-selected", String(i === currentOps));
+          const isSelected = i === currentOps;
+          b.setAttribute("aria-selected", String(isSelected));
+          b.setAttribute("tabindex", isSelected ? "0" : "-1");
+          if (isSelected) {
+            if (moveFocus) b.focus();
+            if (opsRail && opsRail.scrollWidth > opsRail.clientWidth) {
+              const targetLeft = Math.max(0, b.offsetLeft - (opsRail.clientWidth - b.offsetWidth) / 2);
+              opsRail.scrollTo({ left: targetLeft, behavior: "smooth" });
+            }
+          }
+        });
+        opsSlides.forEach(function (slide, i) {
+          const isInactive = i !== currentOps;
+          slide.setAttribute("aria-hidden", String(isInactive));
+          if (isInactive) {
+            slide.setAttribute("inert", "");
+            slide.inert = true;
+          } else {
+            slide.removeAttribute("inert");
+            slide.inert = false;
+          }
         });
         if (opsCounter) opsCounter.textContent = (currentOps + 1) + " / " + totalOps;
       }
 
       opsPillarBtns.forEach(function (btn) {
         btn.addEventListener("click", function () {
-          setOpsSlide(Number(btn.getAttribute("data-ops-index")));
+          setOpsSlide(Number(btn.getAttribute("data-ops-index")), false);
         });
       });
-      if (opsPrev) opsPrev.addEventListener("click", function () { setOpsSlide(currentOps - 1); });
-      if (opsNext) opsNext.addEventListener("click", function () { setOpsSlide(currentOps + 1); });
+      bindTablistKeyboard(opsPillarBtns, setOpsSlide);
+      if (opsPrev) opsPrev.addEventListener("click", function () { setOpsSlide(currentOps - 1, false); });
+      if (opsNext) opsNext.addEventListener("click", function () { setOpsSlide(currentOps + 1, false); });
 
       // Mini-sim 1: Suspensión de clase
       const suspendBtn = document.getElementById("ops-suspend-btn");
@@ -2936,15 +3083,52 @@
         });
       }
 
-      // Mini-sim 3: Coach attendance toggle
+      // Mini-sim 3: Coach attendance toggle (with status feedback)
+      const opsAttMsg = document.getElementById("ops-att-msg");
       document.querySelectorAll(".att-btn").forEach(function (btn) {
         btn.addEventListener("click", function () {
           const rowId = btn.getAttribute("data-att-row");
+          const athlete = btn.getAttribute("data-athlete") || "Atleta";
+          const state = btn.getAttribute("data-state") === "presente" ? "Presente" : "Ausente";
           document.querySelectorAll('.att-btn[data-att-row="' + rowId + '"]').forEach(function (peer) {
             peer.setAttribute("aria-pressed", String(peer === btn));
           });
+          if (opsAttMsg) {
+            opsAttMsg.textContent = athlete + " marcado como " + state + " · editable durante las próximas 18h 20m.";
+          }
         });
       });
+
+      // Mini-sim 4: Caja immutable audit simulation
+      const auditBtn = document.getElementById("ops-audit-btn");
+      const auditRow1 = document.getElementById("ops-audit-row-1");
+      const auditSub1 = document.getElementById("ops-audit-sub-1");
+      const auditTag1 = document.getElementById("ops-audit-tag-1");
+      const auditRow2 = document.getElementById("ops-audit-row-2");
+      const auditMsg = document.getElementById("ops-audit-msg");
+      let auditSimulated = false;
+      if (auditBtn && auditRow1 && auditSub1 && auditTag1 && auditRow2 && auditMsg) {
+        auditBtn.addEventListener("click", function () {
+          auditSimulated = !auditSimulated;
+          if (auditSimulated) {
+            auditRow1.classList.add("is-voided");
+            auditSub1.textContent = 'Motivo anulación: "Importe duplicado en mostrador"';
+            auditTag1.className = "badge badge-coral";
+            auditTag1.textContent = "Anulado (Admin)";
+            auditRow2.hidden = false;
+            auditBtn.textContent = "Restablecer simulación";
+            auditMsg.textContent = "El cobro #1041 quedó anulado con motivo y autoría, y se asentó #1042 firme.";
+          } else {
+            auditRow1.classList.remove("is-voided");
+            auditSub1.textContent = "Efectivo · Cargado por error en mostrador";
+            auditTag1.className = "badge badge-mint";
+            auditTag1.textContent = "Firme";
+            auditRow2.hidden = true;
+            auditBtn.textContent = "Simular anulación con motivo";
+            auditMsg.textContent = "Los cobros no se borran: probá cómo corrige un error un Administrador.";
+          }
+        });
+      }
 
       // 6. FAQ Accordion
       document.querySelectorAll(".faq-trigger").forEach(function (trigger) {
@@ -2957,12 +3141,43 @@
         });
       });
 
-      // 8. Demo form inline validation and confirmation
+      // 7. Demo form validation, live error recovery, XSS-safe summary & copy action
       const form = document.getElementById("demo-form");
       const boxInput = document.getElementById("box-name");
       const nameInput = document.getElementById("contact-name");
       const channelInput = document.getElementById("contact-channel");
+      const athleteSelect = document.getElementById("athlete-count");
+      const needInput = document.getElementById("main-need");
+      const submitBtn = document.getElementById("demo-submit-btn");
       const feedback = document.getElementById("form-feedback");
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      const phoneAllowedRegex = /^[+\d\s().-]+$/;
+
+      function validateBoxValue(val) {
+        const trimmed = val.trim();
+        if (!trimmed) return "Ingresá el nombre de tu box o centro.";
+        if (trimmed.length < 2) return "El nombre del box debe tener al menos 2 caracteres.";
+        return "";
+      }
+
+      function validateNameValue(val) {
+        const trimmed = val.trim();
+        if (!trimmed) return "Ingresá tu nombre para poder contactarte.";
+        if (trimmed.length < 2) return "Ingresá un nombre válido (mínimo 2 caracteres).";
+        return "";
+      }
+
+      function validateChannelValue(val) {
+        const trimmed = val.trim();
+        if (!trimmed) return "Ingresá un email o número de WhatsApp de contacto.";
+        if (emailRegex.test(trimmed)) return "";
+        const digitsOnly = trimmed.replace(/\D/g, "");
+        if (phoneAllowedRegex.test(trimmed) && digitsOnly.length >= 8 && digitsOnly.length <= 15) {
+          return "";
+        }
+        return "Ingresá un email válido (ej. hola@tubox.com) o un WhatsApp con código de área (mínimo 8 dígitos).";
+      }
 
       function setFieldError(input, errId, message) {
         const errEl = document.getElementById(errId);
@@ -2976,21 +3191,120 @@
         return true;
       }
 
+      if (boxInput) {
+        boxInput.addEventListener("input", function () {
+          if (boxInput.getAttribute("aria-invalid") === "true") {
+            setFieldError(boxInput, "err-box-name", validateBoxValue(boxInput.value));
+          }
+        });
+      }
+      if (nameInput) {
+        nameInput.addEventListener("input", function () {
+          if (nameInput.getAttribute("aria-invalid") === "true") {
+            setFieldError(nameInput, "err-contact-name", validateNameValue(nameInput.value));
+          }
+        });
+      }
+      if (channelInput) {
+        channelInput.addEventListener("input", function () {
+          if (channelInput.getAttribute("aria-invalid") === "true") {
+            setFieldError(channelInput, "err-contact-channel", validateChannelValue(channelInput.value));
+          }
+        });
+      }
+
       if (form && boxInput && nameInput && channelInput && feedback) {
         form.addEventListener("submit", function (event) {
           event.preventDefault();
-          feedback.hidden = true;
 
-          const validBox = setFieldError(boxInput, "err-box-name", boxInput.value.trim() ? "" : "Ingresá el nombre de tu box o centro.");
-          const validName = setFieldError(nameInput, "err-contact-name", nameInput.value.trim() ? "" : "Ingresá tu nombre para poder contactarte.");
-          const validChannel = setFieldError(channelInput, "err-contact-channel", channelInput.value.trim().length >= 5 ? "" : "Ingresá un email o WhatsApp válido.");
+          const errBox = validateBoxValue(boxInput.value);
+          const errName = validateNameValue(nameInput.value);
+          const errChannel = validateChannelValue(channelInput.value);
 
-          if (!validBox || !validName || !validChannel) {
+          const validBox = setFieldError(boxInput, "err-box-name", errBox);
+          const validName = setFieldError(nameInput, "err-contact-name", errName);
+          const validChannel = setFieldError(channelInput, "err-contact-channel", errChannel);
+
+          if (!validBox) {
+            boxInput.focus();
+            return;
+          }
+          if (!validName) {
+            nameInput.focus();
+            return;
+          }
+          if (!validChannel) {
+            channelInput.focus();
             return;
           }
 
-          feedback.innerHTML = "<strong>Solicitud lista para " + boxInput.value.trim() + ":</strong> preparamos la demo con tus horarios y planes para " + nameInput.value.trim() + " (" + channelInput.value.trim() + ").";
+          const boxVal = boxInput.value.trim();
+          const nameVal = nameInput.value.trim();
+          const channelVal = channelInput.value.trim();
+          const scaleLabel = athleteSelect && athleteSelect.selectedOptions[0]
+            ? athleteSelect.selectedOptions[0].textContent
+            : "Entre 80 y 200 atletas";
+          const needVal = needInput && needInput.value.trim()
+            ? needInput.value.trim()
+            : "Ordenar grilla de clases, reservas y caja diaria.";
+
+          const summaryText = [
+            "Solicitud de demo Centris (20 min)",
+            "• Box / Centro: " + boxVal,
+            "• Contacto: " + nameVal + " (" + channelVal + ")",
+            "• Escala actual: " + scaleLabel,
+            "• Prioridad operativa: " + needVal
+          ].join("\n");
+
+          feedback.textContent = "";
+
+          const titleLine = document.createElement("div");
+          const strongEl = document.createElement("strong");
+          strongEl.textContent = "Resumen de demo preparado para " + boxVal + ": ";
+          titleLine.appendChild(strongEl);
+          titleLine.appendChild(document.createTextNode("como este entorno es de demostración local (sin envío a servidor), podés copiar el resumen listo a continuación:"));
+
+          const preEl = document.createElement("pre");
+          preEl.className = "form-feedback-summary";
+          preEl.textContent = summaryText;
+
+          const actionsRow = document.createElement("div");
+          actionsRow.className = "form-feedback-actions";
+
+          const copyBtn = document.createElement("button");
+          copyBtn.type = "button";
+          copyBtn.className = "sim-action-btn is-primary";
+          copyBtn.id = "copy-demo-summary";
+          copyBtn.textContent = "Copiar resumen de solicitud";
+
+          const copyStatus = document.createElement("span");
+          copyStatus.className = "ops-action-msg";
+          copyStatus.setAttribute("aria-live", "polite");
+
+          copyBtn.addEventListener("click", function () {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(summaryText).then(function () {
+                copyBtn.textContent = "Resumen copiado";
+                copyStatus.textContent = "Listo en tu portapapeles para pegarlo por WhatsApp o email.";
+              }).catch(function () {
+                copyStatus.textContent = "Seleccioná el recuadro de arriba para copiar el texto.";
+              });
+            } else {
+              copyStatus.textContent = "Seleccioná el recuadro de arriba para copiar el texto.";
+            }
+          });
+
+          actionsRow.appendChild(copyBtn);
+          actionsRow.appendChild(copyStatus);
+
+          feedback.appendChild(titleLine);
+          feedback.appendChild(preEl);
+          feedback.appendChild(actionsRow);
           feedback.hidden = false;
+
+          if (submitBtn) {
+            submitBtn.textContent = "Actualizar resumen de demo";
+          }
         });
       }
     })();
