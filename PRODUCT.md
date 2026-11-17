@@ -57,14 +57,14 @@ Centris resuelve la fricción real del mostrador y la hora pico en gimnasios de 
 - **Nombre:** Centris.
 - **Idioma y voz:** Español rioplatense/argentino profesional, directo y operativo (`vos` / `ordená`, `probá`, `pedí`), hablado de igual a igual al dueño o coordinador de un box; evita jerga corporativa abstracta y promesas infladas.
 - **Terminología del dominio a preservar:** *box*, *atleta*, *coach*, *recepcionista*, *administrador*, *mostrador*, *piso*, *grilla*, *cupo*, *créditos*, *membresía*, *vigencia*, *moroso*, *pago parcial*, *anulación con motivo*, *baja anticipada*, *cancelación en término / tardía*.
-- **Activos de marca existentes:** Isologotipo vectorial SVG adaptable en `index.html` y `favicon.svg`, más íconos de aplicación (`favicon.ico`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `maskable-512.png`) y `site.webmanifest`.
+- **Activos de marca existentes:** Isologotipo vectorial SVG adaptable en `index.html` y `favicon.svg`, íconos de aplicación (`favicon.ico`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `maskable-512.png`), `site.webmanifest`, y 4 fotografías documentales con procedencia embebida en `assets/` (`hero-box-panorama.jpg`, `scene-mostrador.jpg`, `scene-piso-coach.jpg`, `scene-celular-atleta.jpg`).
 
 ## Evidence on Hand
 
 - **Demostraciones interactivas reales de reglas del producto en `index.html`:**
-  - Tablero operativo en el hero (`#demo-interactiva`) con tres vistas interactivas: *Clases y cupos* (simulación de reserva y liberación de cupo en mostrador + resumen de atleta con saldo pendiente habilitada para entrenar), *Caja y morosos* (tabla de estados contables con pagos al día, parciales y anulados) y *Celular del atleta* (simulación de reserva/cancelación móvil con descuento y devolución de crédito).
+  - Ventana panorámica del box con tablero operativo anclado en el hero (`#demo-interactiva`) y tres vistas interactivas sincronizadas: *Clases y cupos* (simulación de reserva y liberación de cupo en mostrador + resumen de atleta con saldo pendiente habilitada para entrenar), *Caja y morosos* (tabla de estados contables con pagos al día, parciales y anulados) y *Celular del atleta* (simulación de reserva/cancelación móvil sincronizada con la grilla de recepción).
+  - Tríada de escenas documentales del box (*Mostrador*, *Piso* y *Celular*) y grilla abierta 2×2 de los 4 roles (`#roles`) detallando permisos y límites de privacidad.
   - Slider operativo (`#operacion`) con cuatro micro-simulaciones de reglas: suspensión de clase con devolución automática de 14 créditos, baja anticipada con liberación de reservas futuras en cascada, toma de asistencia por coach con ventana de 24 h y rastro contable de pago anulado vs. pago firme.
-  - Selector interactivo de los 4 roles (`#roles`) detallando permisos y límites de privacidad.
 - **Evidencia ausente (prohibido fabricar):**
   - No existen testimonios de clientes terceros, logos de boxes clientes reales, casos de estudio, métricas comerciales de adopción ni precios públicos de suscripción. Ningún trabajo futuro debe inventarlos.
 
