@@ -2,3 +2,10 @@ node_modules/
 .netlify/
 dist/
 .DS_Store
+
+# Agentes:
+.agent/
+.gemini/
+.impeccable/
+.opencode/
+.claude/
