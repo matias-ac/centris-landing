@@ -252,8 +252,15 @@
       width: 100%;
       max-width: 1240px;
       margin: 0 auto;
-      padding-left: 20px;
-      padding-right: 20px;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    @media (min-width: 380px) {
+      .container {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
     }
 
     @media (min-width: 768px) {
@@ -344,6 +351,16 @@
       display: flex;
       align-items: center;
       gap: 8px;
+    }
+
+    .nav-actions .btn-sm {
+      display: none;
+    }
+
+    @media (min-width: 380px) {
+      .nav-actions .btn-sm {
+        display: inline-flex;
+      }
     }
 
     .theme-toggle-btn {
@@ -1025,6 +1042,8 @@
 
     .table-wrap {
       overflow-x: auto;
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch;
       border-radius: var(--radius-control);
       border: 1px solid var(--border-subtle);
       background: var(--bg-surface);
@@ -1266,6 +1285,8 @@
       display: flex;
       flex-wrap: nowrap;
       overflow-x: auto;
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch;
       gap: 8px;
       padding-bottom: 4px;
       scrollbar-width: none;
@@ -2095,13 +2116,9 @@
         box-shadow 240ms var(--ease-out-expo);
     }
 
-    .scene-card:hover,
     .scene-card:focus-within,
-    .role-card:hover,
     .role-card:focus-within,
-    .modality-card:hover,
     .modality-card:focus-within,
-    .panel-surface:hover,
     .panel-surface:focus-within {
       transform: translateY(-3px);
       border-color: var(--border-hover);
@@ -2109,24 +2126,69 @@
       box-shadow: 0 14px 32px rgba(0, 0, 0, 0.24);
     }
 
-    html.light .scene-card:hover,
     html.light .scene-card:focus-within,
-    html.light .role-card:hover,
     html.light .role-card:focus-within,
-    html.light .modality-card:hover,
     html.light .modality-card:focus-within,
-    html.light .panel-surface:hover,
     html.light .panel-surface:focus-within {
       background-color: var(--bg-surface);
       border-color: var(--border-hover);
       box-shadow: 0 12px 28px rgba(9, 9, 11, 0.08);
     }
 
-    .role-card:hover .role-panel-title,
-    .modality-card:hover .modality-name,
-    .scene-card:hover .scene-title {
-      color: var(--accent-text);
-      transition: color 180ms ease;
+    @media (hover: hover) {
+      .scene-card:hover,
+      .role-card:hover,
+      .modality-card:hover,
+      .panel-surface:hover {
+        transform: translateY(-3px);
+        border-color: var(--border-hover);
+        background-color: var(--bg-elevated);
+        box-shadow: 0 14px 32px rgba(0, 0, 0, 0.24);
+      }
+
+      html.light .scene-card:hover,
+      html.light .role-card:hover,
+      html.light .modality-card:hover,
+      html.light .panel-surface:hover {
+        background-color: var(--bg-surface);
+        border-color: var(--border-hover);
+        box-shadow: 0 12px 28px rgba(9, 9, 11, 0.08);
+      }
+
+      .role-card:hover .role-panel-title,
+      .modality-card:hover .modality-name,
+      .scene-card:hover .scene-title {
+        color: var(--accent-text);
+        transition: color 180ms ease;
+      }
+
+      .check-list li:hover {
+        color: var(--text-primary);
+        background-color: rgba(255, 255, 255, 0.03);
+        transform: translateX(4px);
+      }
+
+      html.light .check-list li:hover {
+        background-color: rgba(9, 9, 11, 0.035);
+      }
+
+      .check-list li:hover .icon-inline {
+        transform: scale(1.14);
+      }
+
+      .class-row:hover,
+      .coach-row:hover,
+      .audit-step:hover,
+      tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.025);
+      }
+
+      html.light .class-row:hover,
+      html.light .coach-row:hover,
+      html.light .audit-step:hover,
+      html.light tbody tr:hover {
+        background-color: rgba(9, 9, 11, 0.028);
+      }
     }
 
     .faq-item:has(.faq-trigger[aria-expanded="true"]) {
@@ -2140,22 +2202,8 @@
       transition: background-color 180ms ease, color 180ms ease, transform 180ms var(--ease-out-expo);
     }
 
-    .check-list li:hover {
-      color: var(--text-primary);
-      background-color: rgba(255, 255, 255, 0.03);
-      transform: translateX(4px);
-    }
-
-    html.light .check-list li:hover {
-      background-color: rgba(9, 9, 11, 0.035);
-    }
-
     .check-list li .icon-inline {
       transition: transform 200ms var(--ease-out-expo);
-    }
-
-    .check-list li:hover .icon-inline {
-      transform: scale(1.14);
     }
 
     .class-row,
@@ -2163,20 +2211,6 @@
     .audit-step,
     tbody tr {
       transition: background-color 160ms ease;
-    }
-
-    .class-row:hover,
-    .coach-row:hover,
-    .audit-step:hover,
-    tbody tr:hover {
-      background-color: rgba(255, 255, 255, 0.025);
-    }
-
-    html.light .class-row:hover,
-    html.light .coach-row:hover,
-    html.light .audit-step:hover,
-    html.light tbody tr:hover {
-      background-color: rgba(9, 9, 11, 0.028);
     }
 
     /* Smooth panel & FAQ transitions + live telemetry pulse */
