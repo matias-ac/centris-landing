@@ -1931,48 +1931,114 @@
       margin: 10px 0 0;
     }
 
-    /* ---------------- Motion, Ambient Field, Reading Hovers & One-Shot Scroll Reveal ---------------- */
+    /* ---------------- Overdrive: Reactive Canvas Field, View Transitions & Scroll Depth ---------------- */
+    .scroll-progress-track {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      z-index: 60;
+      pointer-events: none;
+      background: transparent;
+    }
+
+    .scroll-progress-fill {
+      width: 100%;
+      height: 100%;
+      background: var(--accent-border);
+      transform-origin: left center;
+      transform: scaleX(var(--scroll-progress, 0));
+      will-change: transform;
+    }
+
+    @supports (animation-timeline: scroll()) {
+      .scroll-progress-fill {
+        animation: overdrive-scroll-progress linear both;
+        animation-timeline: scroll(root);
+      }
+      @keyframes overdrive-scroll-progress {
+        from { transform: scaleX(0); }
+        to { transform: scaleX(1); }
+      }
+    }
+
+    @supports (animation-timeline: view()) {
+      .hero-panorama-img {
+        animation: overdrive-panorama-depth linear both;
+        animation-timeline: view();
+        animation-range: exit-crossing 0% exit 100%;
+      }
+      @keyframes overdrive-panorama-depth {
+        from {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        to {
+          transform: translate3d(0, 22px, 0) scale(1.06);
+        }
+      }
+    }
+
+    ::view-transition-old(cockpit-panel),
+    ::view-transition-new(cockpit-panel) {
+      animation-duration: 280ms;
+      animation-timing-function: var(--ease-out-expo);
+    }
+
+    ::view-transition-old(cockpit-panel) {
+      animation-name: overdrive-vt-out;
+    }
+
+    ::view-transition-new(cockpit-panel) {
+      animation-name: overdrive-vt-in;
+    }
+
+    @keyframes overdrive-vt-out {
+      from { opacity: 1; transform: translateY(0) scale(1); }
+      to { opacity: 0; transform: translateY(-6px) scale(0.992); }
+    }
+
+    @keyframes overdrive-vt-in {
+      from { opacity: 0; transform: translateY(8px) scale(0.992); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
     .hero {
       position: relative;
       isolation: isolate;
+      overflow-x: clip;
       --hero-x: 50%;
       --hero-y: 26%;
     }
 
-    .hero::before {
-      content: "";
+    .hero-telemetry-canvas {
       position: absolute;
       inset: 0;
-      z-index: -2;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
       pointer-events: none;
-      background-image: radial-gradient(rgba(161, 161, 170, 0.16) 1px, transparent 1px);
-      background-size: 24px 24px;
-      mask-image: radial-gradient(ellipse 75% 65% at 50% 28%, #000 20%, transparent 78%);
-      -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 28%, #000 20%, transparent 78%);
-      opacity: 0.55;
-    }
-
-    html.light .hero::before {
-      background-image: radial-gradient(rgba(82, 82, 91, 0.15) 1px, transparent 1px);
-      opacity: 0.5;
+      display: block;
+      mask-image: linear-gradient(180deg, #000 0%, #000 72%, transparent 100%);
+      -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 72%, transparent 100%);
     }
 
     .hero::after {
       content: "";
       position: absolute;
       inset: -40px 0 0;
-      z-index: -1;
+      z-index: -2;
       pointer-events: none;
       background:
-        radial-gradient(560px circle at var(--hero-x) var(--hero-y), rgba(193, 244, 41, 0.10), transparent 68%),
-        radial-gradient(480px circle at calc(100% - var(--hero-x)) 36%, rgba(24, 255, 200, 0.07), transparent 66%);
+        radial-gradient(560px circle at var(--hero-x) var(--hero-y), rgba(193, 244, 41, 0.08), transparent 68%),
+        radial-gradient(480px circle at calc(100% - var(--hero-x)) 36%, rgba(24, 255, 200, 0.06), transparent 66%);
       animation: hero-ambient-drift 11s ease-in-out infinite alternate;
     }
 
     html.light .hero::after {
       background:
-        radial-gradient(560px circle at var(--hero-x) var(--hero-y), rgba(193, 244, 41, 0.22), transparent 68%),
-        radial-gradient(480px circle at calc(100% - var(--hero-x)) 36%, rgba(4, 120, 87, 0.08), transparent 66%);
+        radial-gradient(560px circle at var(--hero-x) var(--hero-y), rgba(193, 244, 41, 0.18), transparent 68%),
+        radial-gradient(480px circle at calc(100% - var(--hero-x)) 36%, rgba(4, 120, 87, 0.07), transparent 66%);
     }
 
     @keyframes hero-ambient-drift {
@@ -2192,6 +2258,9 @@
   </style>
 </head>
 <body>
+  <div class="scroll-progress-track" aria-hidden="true">
+    <div class="scroll-progress-fill" id="scroll-progress-fill"></div>
+  </div>
   <a href="#top" class="skip-link">Saltar al contenido principal</a>
 
   <header class="site-header">
@@ -2276,6 +2345,7 @@
   <main id="top">
     <!-- 1. HERO + VENTANA PANORÁMICA + DEMO INTERACTIVA EN VIVO -->
     <section class="hero" aria-labelledby="hero-heading">
+      <canvas id="hero-telemetry-canvas" class="hero-telemetry-canvas" aria-hidden="true"></canvas>
       <div class="container">
         <div class="hero-copy">
           <h1 id="hero-heading" class="hero-title">
@@ -2307,7 +2377,7 @@
         <div class="hero-panorama-stage">
           <div class="hero-panorama-frame">
             <img
-              src="./assets/hero-box-panorama.jpg"
+              src="./assets/hero-box-panorama.jpeg"
               width="1376"
               height="768"
               alt="Piso de entrenamiento de un box en hora pico con atletas en tarimas de levantamiento y coach tomando asistencia desde el celular"
@@ -3337,14 +3407,16 @@
         el.classList.add("is-flashing");
       }
 
-      // 2. Hero cockpit tabs
+      const reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let emitTelemetryPulse = function () {};
+
+      // 2. Hero cockpit tabs with View Transitions API + clean fallback
       const cockpitTabs = document.querySelectorAll(".cockpit-tab");
       const cockpitPanels = document.querySelectorAll(".cockpit-panel");
+      const cockpitBody = document.querySelector(".cockpit-body");
+      let activeCockpitVT = null;
 
-      function activateCockpitTab(idx, moveFocus) {
-        const total = cockpitTabs.length;
-        if (!total) return;
-        const activeIdx = (idx + total) % total;
+      function applyCockpitTabDOM(activeIdx, moveFocus, useCssSwitchAnim) {
         cockpitTabs.forEach(function (t, i) {
           const isSelected = i === activeIdx;
           t.setAttribute("aria-selected", String(isSelected));
@@ -3356,12 +3428,51 @@
         cockpitPanels.forEach(function (p) {
           const isTarget = p.id === targetId;
           p.hidden = !isTarget;
-          if (isTarget) {
+          if (isTarget && useCssSwitchAnim) {
             p.classList.remove("is-switching");
             void p.offsetWidth;
             p.classList.add("is-switching");
+          } else {
+            p.classList.remove("is-switching");
           }
         });
+      }
+
+      function activateCockpitTab(idx, moveFocus) {
+        const total = cockpitTabs.length;
+        if (!total) return;
+        const activeIdx = (idx + total) % total;
+        const currentSelected = document.querySelector('.cockpit-tab[aria-selected="true"]');
+        if (currentSelected === cockpitTabs[activeIdx]) {
+          if (moveFocus) cockpitTabs[activeIdx].focus();
+          return;
+        }
+
+        emitTelemetryPulse("mint");
+
+        if (
+          cockpitBody &&
+          typeof document.startViewTransition === "function" &&
+          !reducedMotion
+        ) {
+          if (activeCockpitVT && typeof activeCockpitVT.skipTransition === "function") {
+            try { activeCockpitVT.skipTransition(); } catch (e) {}
+          }
+          cockpitBody.style.viewTransitionName = "cockpit-panel";
+          const vt = document.startViewTransition(function () {
+            applyCockpitTabDOM(activeIdx, moveFocus, false);
+          });
+          activeCockpitVT = vt;
+          vt.finished.catch(function () {}).finally(function () {
+            if (activeCockpitVT === vt) {
+              cockpitBody.style.viewTransitionName = "";
+              activeCockpitVT = null;
+            }
+          });
+          return;
+        }
+
+        applyCockpitTabDOM(activeIdx, moveFocus, true);
       }
 
       cockpitTabs.forEach(function (tab, idx) {
@@ -3471,6 +3582,7 @@
               simFeedback.innerHTML = "<strong>Reserva de Sofía cancelada en término:</strong> se liberó el lugar en " + info.title + " (" + info.booked + "/" + info.cap + ") y volvió su crédito semanal (" + remaining + "/3).";
             }
           }
+          emitTelemetryPulse(bookedState[id] ? "volt" : "mint");
           if (id === "funcional" && athleteFeedback) {
             athleteFeedback.innerHTML = bookedState.funcional
               ? "<strong>Sincronizado con mostrador:</strong> 18:00 Funcional quedó en 15/16 cupos y Sofía tiene " + remaining + "/3 créditos disponibles."
@@ -3487,6 +3599,7 @@
           const used = (bookedState.funcional ? 1 : 0) + (bookedState.oly ? 1 : 0);
           const remaining = Math.max(0, baseSofiaCredits - used);
 
+          emitTelemetryPulse(bookedState.funcional ? "volt" : "mint");
           if (athleteFeedback) {
             athleteFeedback.innerHTML = bookedState.funcional
               ? "<strong>Lugar reservado desde el celular:</strong> 18:00 Funcional quedó en " + info.booked + "/" + info.cap + " cupos y descontó 1 crédito semanal (" + remaining + "/3)."
@@ -3832,25 +3945,272 @@
         });
       }
 
-      // 8. Interactive ambient spotlight on .hero & One-Shot Scroll Reveal (IntersectionObserver)
-      const reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      // 8. Overdrive Reactive Telemetry Canvas 2D + Scroll Depth Fallback + One-Shot Scroll Reveal
       const heroSection = document.querySelector(".hero");
-      if (heroSection && !reducedMotion) {
-        let rafPending = false;
-        heroSection.addEventListener("pointermove", function (e) {
-          if (rafPending) return;
-          rafPending = true;
-          window.requestAnimationFrame(function () {
+      const heroCopyEl = document.querySelector(".hero-copy");
+      const telemetryCanvas = document.getElementById("hero-telemetry-canvas");
+
+      if (heroSection && telemetryCanvas && telemetryCanvas.getContext) {
+        const ctx = telemetryCanvas.getContext("2d");
+        let width = 0;
+        let height = 0;
+        let dpr = 1;
+        let rafId = null;
+        let heroVisible = true;
+        let pointerActive = false;
+        let targetX = 0.5;
+        let targetY = 0.28;
+        let currentX = 0.5;
+        let currentY = 0.28;
+        let copyZone = { cx: 0, cy: 0, rx: 1, ry: 1 };
+        const pulses = [];
+
+        function getThemePalette() {
+          const isLight = document.documentElement.classList.contains("light");
+          return isLight
+            ? {
+                dot: "rgba(82, 82, 91, 0.22)",
+                cross: "rgba(63, 98, 18, 0.28)",
+                volt: "rgba(63, 98, 18, ",
+                mint: "rgba(4, 120, 87, "
+              }
+            : {
+                dot: "rgba(161, 161, 170, 0.15)",
+                cross: "rgba(193, 244, 41, 0.22)",
+                volt: "rgba(193, 244, 41, ",
+                mint: "rgba(24, 255, 200, "
+              };
+        }
+
+        function resizeCanvas() {
+          const rect = heroSection.getBoundingClientRect();
+          if (!rect.width || !rect.height) return;
+          dpr = Math.min(window.devicePixelRatio || 1, 2);
+          width = Math.round(rect.width);
+          height = Math.round(rect.height);
+          telemetryCanvas.width = Math.round(width * dpr);
+          telemetryCanvas.height = Math.round(height * dpr);
+          if (heroCopyEl) {
+            const cRect = heroCopyEl.getBoundingClientRect();
+            copyZone = {
+              cx: cRect.left - rect.left + cRect.width * 0.5,
+              cy: cRect.top - rect.top + cRect.height * 0.5,
+              rx: Math.max(180, cRect.width * 0.56),
+              ry: Math.max(120, cRect.height * 0.64)
+            };
+          }
+        }
+
+        function getReadingZoneFactor(x, y) {
+          const nx = (x - copyZone.cx) / copyZone.rx;
+          const ny = (y - copyZone.cy) / copyZone.ry;
+          const d = nx * nx + ny * ny;
+          if (d >= 1.25) return 1;
+          if (d <= 0.45) return 0.06;
+          return 0.06 + ((d - 0.45) / 0.8) * 0.94;
+        }
+
+        emitTelemetryPulse = function (tone) {
+          if (reducedMotion || !width || !height) return;
+          pulses.push({
+            x: width * 0.5,
+            y: Math.min(height * 0.54, 420),
+            radius: 28,
+            maxRadius: Math.max(width, height) * 0.62,
+            alpha: 0.72,
+            tone: tone === "mint" ? "mint" : "volt"
+          });
+          if (pulses.length > 4) pulses.shift();
+        };
+
+        function drawTelemetryFrame(nowMs) {
+          if (!ctx || !width || !height) return;
+          const t = (nowMs || 0) * 0.001;
+          const palette = getThemePalette();
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          ctx.clearRect(0, 0, width, height);
+
+          // Ease pointer inertia
+          const ease = pointerActive ? 0.12 : 0.04;
+          if (!pointerActive && !reducedMotion) {
+            targetX = 0.5 + Math.sin(t * 0.35) * 0.14;
+            targetY = 0.26 + Math.cos(t * 0.27) * 0.06;
+          }
+          currentX += (targetX - currentX) * ease;
+          currentY += (targetY - currentY) * ease;
+
+          const px = currentX * width;
+          const py = currentY * height;
+          const spacing = width < 640 ? 32 : 38;
+          const influenceR = width < 640 ? 180 : 250;
+
+          // Update radial pulse waves
+          for (let i = pulses.length - 1; i >= 0; i--) {
+            const p = pulses[i];
+            p.radius += (p.maxRadius - p.radius) * 0.065 + 3.2;
+            p.alpha *= 0.962;
+            if (p.alpha < 0.02 || p.radius >= p.maxRadius) {
+              pulses.splice(i, 1);
+            }
+          }
+
+          // Draw subtle radial pulse rings
+          for (let i = 0; i < pulses.length; i++) {
+            const p = pulses[i];
+            const colorBase = p.tone === "mint" ? palette.mint : palette.volt;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.strokeStyle = colorBase + (p.alpha * 0.42).toFixed(3) + ")";
+            ctx.lineWidth = 1.4;
+            ctx.stroke();
+          }
+
+          // Architectural lattice nodes + cursor / pulse illumination
+          const cols = Math.ceil(width / spacing);
+          const rows = Math.ceil(height / spacing);
+          const offsetX = (width - cols * spacing) * 0.5 + spacing * 0.5;
+
+          for (let r = 0; r <= rows; r++) {
+            const y = r * spacing + 18;
+            if (y > height * 0.92) break;
+            for (let c = 0; c <= cols; c++) {
+              const x = offsetX + c * spacing;
+              const dx = x - px;
+              const dy = y - py;
+              const dist = Math.hypot(dx, dy);
+              const cursorEnergy = Math.max(0, 1 - dist / influenceR);
+
+              let waveEnergy = 0;
+              let waveTone = "volt";
+              for (let k = 0; k < pulses.length; k++) {
+                const p = pulses[k];
+                const dPulse = Math.abs(Math.hypot(x - p.x, y - p.y) - p.radius);
+                if (dPulse < 52) {
+                  const contrib = (1 - dPulse / 52) * p.alpha;
+                  if (contrib > waveEnergy) {
+                    waveEnergy = contrib;
+                    waveTone = p.tone;
+                  }
+                }
+              }
+
+              const ambientBeat = reducedMotion ? 0 : Math.max(0, Math.sin(t * 1.4 + c * 0.45 + r * 0.35)) * 0.18;
+              const isAnchor = (c % 4 === 0 && r % 3 === 0);
+              const zoneFactor = getReadingZoneFactor(x, y);
+
+              if (waveEnergy > 0.08 && zoneFactor > 0.25) {
+                const colorPrefix = waveTone === "mint" ? palette.mint : palette.volt;
+                ctx.fillStyle = colorPrefix + Math.min(0.85, (0.25 + waveEnergy * 0.7) * zoneFactor).toFixed(3) + ")";
+                const sz = 1.4 + waveEnergy * 1.8;
+                ctx.fillRect(x - sz * 0.5, y - sz * 0.5, sz, sz);
+              } else if (cursorEnergy > 0.04 && zoneFactor > 0.2) {
+                ctx.fillStyle = palette.volt + ((0.18 + cursorEnergy * 0.55) * zoneFactor).toFixed(3) + ")";
+                const rNode = 1.2 + cursorEnergy * 1.5;
+                ctx.beginPath();
+                ctx.arc(x, y, rNode, 0, Math.PI * 2);
+                ctx.fill();
+              } else if (isAnchor) {
+                ctx.globalAlpha = zoneFactor;
+                ctx.strokeStyle = palette.cross;
+                ctx.lineWidth = 1;
+                const arm = 2.6 + ambientBeat * 2.2;
+                ctx.beginPath();
+                ctx.moveTo(x - arm, y);
+                ctx.lineTo(x + arm, y);
+                ctx.moveTo(x, y - arm);
+                ctx.lineTo(x, y + arm);
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+              } else {
+                ctx.globalAlpha = zoneFactor;
+                ctx.fillStyle = palette.dot;
+                ctx.fillRect(x - 0.8, y - 0.8, 1.6, 1.6);
+                ctx.globalAlpha = 1;
+              }
+            }
+          }
+        }
+
+        function tick(now) {
+          drawTelemetryFrame(now);
+          if (heroVisible && !document.hidden && !reducedMotion) {
+            rafId = window.requestAnimationFrame(tick);
+          } else {
+            rafId = null;
+          }
+        }
+
+        function ensureLoop() {
+          if (reducedMotion) {
+            drawTelemetryFrame(0);
+            return;
+          }
+          if (!rafId && heroVisible && !document.hidden) {
+            rafId = window.requestAnimationFrame(tick);
+          }
+        }
+
+        resizeCanvas();
+        ensureLoop();
+
+        window.addEventListener("resize", function () {
+          resizeCanvas();
+          if (reducedMotion) drawTelemetryFrame(0);
+        }, { passive: true });
+
+        if (!reducedMotion) {
+          heroSection.addEventListener("pointermove", function (e) {
             const rect = heroSection.getBoundingClientRect();
             if (rect.width > 0 && rect.height > 0) {
-              const xPct = Math.max(10, Math.min(90, Math.round(((e.clientX - rect.left) / rect.width) * 100)));
-              const yPct = Math.max(8, Math.min(85, Math.round(((e.clientY - rect.top) / rect.height) * 100)));
-              heroSection.style.setProperty("--hero-x", xPct + "%");
-              heroSection.style.setProperty("--hero-y", yPct + "%");
+              pointerActive = true;
+              targetX = Math.max(0.05, Math.min(0.95, (e.clientX - rect.left) / rect.width));
+              targetY = Math.max(0.05, Math.min(0.88, (e.clientY - rect.top) / rect.height));
+              heroSection.style.setProperty("--hero-x", Math.round(targetX * 100) + "%");
+              heroSection.style.setProperty("--hero-y", Math.round(targetY * 100) + "%");
             }
-            rafPending = false;
-          });
+          }, { passive: true });
+
+          heroSection.addEventListener("pointerleave", function () {
+            pointerActive = false;
+          }, { passive: true });
+        }
+
+        if ("IntersectionObserver" in window) {
+          const heroObs = new IntersectionObserver(function (entries) {
+            heroVisible = Boolean(entries[0] && entries[0].isIntersecting);
+            if (heroVisible) ensureLoop();
+          }, { threshold: 0.02 });
+          heroObs.observe(heroSection);
+        }
+
+        document.addEventListener("visibilitychange", function () {
+          if (!document.hidden && heroVisible) ensureLoop();
         });
+
+        if (window.MutationObserver) {
+          new MutationObserver(function () {
+            if (reducedMotion) drawTelemetryFrame(0);
+          }).observe(rootEl, { attributes: true, attributeFilter: ["class"] });
+        }
+      }
+
+      // Scroll-progress fallback only when native CSS scroll-timeline is unsupported
+      const scrollProgressEl = document.getElementById("scroll-progress-fill");
+      if (scrollProgressEl && !(window.CSS && CSS.supports && CSS.supports("animation-timeline: scroll()"))) {
+        let scrollRaf = false;
+        function updateScrollProgress() {
+          scrollRaf = false;
+          const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+          const ratio = Math.max(0, Math.min(1, window.scrollY / maxScroll));
+          scrollProgressEl.style.setProperty("--scroll-progress", ratio.toFixed(4));
+        }
+        window.addEventListener("scroll", function () {
+          if (!scrollRaf) {
+            scrollRaf = true;
+            window.requestAnimationFrame(updateScrollProgress);
+          }
+        }, { passive: true });
+        updateScrollProgress();
       }
 
       if ("IntersectionObserver" in window && !reducedMotion) {
