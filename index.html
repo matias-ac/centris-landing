@@ -145,10 +145,70 @@
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+      /* Suppress spatial motion, blur, scaling, and infinite ambient loops while preserving clear color/opacity feedback */
+      .hero::after,
+      .live-beacon::after,
+      .hero-panorama-img,
+      [data-reveal],
+      [data-reveal="pending"],
+      [data-reveal="entering"] {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+      }
+
+      .ops-track,
+      .skip-link,
+      .faq-chevron {
+        transition: none !important;
+      }
+
+      .scene-card:focus-within,
+      .role-card:focus-within,
+      .modality-card:focus-within,
+      .panel-surface:focus-within,
+      .scene-card:hover,
+      .role-card:hover,
+      .modality-card:hover,
+      .panel-surface:hover,
+      .btn-volt:hover,
+      .check-list li:hover,
+      .check-list li:hover .icon-inline,
+      .scene-card:hover .scene-img {
+        transform: none !important;
+      }
+
+      .cockpit-panel.is-switching,
+      .faq-answer:not([hidden]),
+      .is-flashing {
+        animation: reduced-state-fade 120ms ease both !important;
+      }
+
+      @keyframes reduced-state-fade {
+        from { opacity: 0.72; }
+        to { opacity: 1; }
+      }
+
+      .btn,
+      .cockpit-tab,
+      .sim-action-btn,
+      .ops-pillar-btn,
+      .arrow-btn,
+      .theme-toggle-btn,
+      .nav-links a,
+      .field input,
+      .field select,
+      .field textarea,
+      .scene-card,
+      .role-card,
+      .modality-card,
+      .panel-surface,
+      .faq-item,
+      .check-list li,
+      .mini-stat-value,
+      body {
+        transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease, opacity 120ms ease !important;
       }
     }
 
@@ -3445,7 +3505,18 @@
         el.classList.add("is-flashing");
       }
 
-      const reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const reducedMotionQuery = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+      let reducedMotion = reducedMotionQuery ? reducedMotionQuery.matches : false;
+      if (reducedMotionQuery && reducedMotionQuery.addEventListener) {
+        reducedMotionQuery.addEventListener("change", function (e) {
+          reducedMotion = e.matches;
+          if (reducedMotion) {
+            document.querySelectorAll("[data-reveal]").forEach(function (el) {
+              el.setAttribute("data-reveal", "shown");
+            });
+          }
+        });
+      }
       let emitTelemetryPulse = function () {};
 
       // 2. Hero cockpit tabs with View Transitions API + clean fallback
@@ -3675,7 +3746,7 @@
             if (moveFocus) b.focus();
             if (opsRail && opsRail.scrollWidth > opsRail.clientWidth) {
               const targetLeft = Math.max(0, b.offsetLeft - (opsRail.clientWidth - b.offsetWidth) / 2);
-              opsRail.scrollTo({ left: targetLeft, behavior: "smooth" });
+              opsRail.scrollTo({ left: targetLeft, behavior: reducedMotion ? "auto" : "smooth" });
             }
           }
         });
