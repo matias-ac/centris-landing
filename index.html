@@ -10,9 +10,10 @@
   <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
   <link rel="manifest" href="./site.webmanifest" />
+  <link rel="preload" as="image" href="./assets/hero-box-panorama.jpeg" fetchpriority="high" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=JetBrains+Mono:wght@500;600&family=Onest:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root,
     html.dark {
@@ -33,14 +34,14 @@
 
       --text-primary: #ffffff;
       --text-secondary: #a1a1aa;
-      --text-muted: #71717a;
+      --text-muted: #8b8b95;
 
       --accent-volt: #c1f429;
       --accent-volt-hover: #aedf1b;
       --accent-volt-tint: rgba(193, 244, 41, 0.12);
       --accent-text: #c1f429;
       --accent-border: #c1f429;
-      --text-on-volt: #000000;
+      --text-on-volt: #09090b;
       --volt-btn-border: transparent;
 
       --mint: #18ffc8;
@@ -63,12 +64,33 @@
       --radius-control: 12px;
       --radius-pill: 9999px;
 
-      --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+      --font-sans: "Onest", "DM Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+
+      --p-scale: 1;
+      --text-display: calc(clamp(2.35rem, 5vw, 3.8rem) * var(--p-scale, 1));
+      --text-h1: calc(clamp(1.75rem, 3.2vw, 2.5rem) * var(--p-scale, 1));
+      --text-h2: calc(clamp(1.375rem, 2.2vw, 1.75rem) * var(--p-scale, 1));
+      --text-h3: calc(1.25rem * var(--p-scale, 1));
+      --text-subhead: calc(1.0625rem * var(--p-scale, 1));
+      --text-lead: calc(clamp(1.0625rem, 1.4vw, 1.1875rem) * var(--p-scale, 1));
+      --text-body: calc(1rem * var(--p-scale, 1));
+      --text-ui: calc(0.9375rem * var(--p-scale, 1));
+      --text-sm: calc(0.875rem * var(--p-scale, 1));
+      --text-xs: calc(0.8125rem * var(--p-scale, 1));
+      --text-badge: calc(0.75rem * var(--p-scale, 1));
+
+      --body-leading: 1.6;
+      --body-tracking: 0.004em;
+
       --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     html.light {
       color-scheme: light;
+      --body-leading: 1.55;
+      --body-tracking: 0em;
       --bg-canvas: #f4f4f5;
       --bg-surface: #ffffff;
       --bg-elevated: #eceef0;
@@ -85,23 +107,23 @@
 
       --text-primary: #09090b;
       --text-secondary: #52525b;
-      --text-muted: #71717a;
+      --text-muted: #63636b;
 
       --accent-volt: #c1f429;
       --accent-volt-hover: #aedf1b;
       --accent-volt-tint: #f4fde0;
       --accent-text: #3f6212;
       --accent-border: #3f6212;
-      --text-on-volt: #000000;
+      --text-on-volt: #09090b;
       --volt-btn-border: rgba(9, 9, 11, 0.10);
 
       --mint: #047857;
       --mint-bg: rgba(4, 120, 87, 0.10);
       --mint-border: rgba(4, 120, 87, 0.24);
 
-      --amber: #b45309;
-      --amber-bg: rgba(180, 83, 9, 0.10);
-      --amber-border: rgba(180, 83, 9, 0.24);
+      --amber: #92400e;
+      --amber-bg: rgba(146, 64, 14, 0.10);
+      --amber-border: rgba(146, 64, 14, 0.24);
 
       --coral: #b91c1c;
       --coral-bg: rgba(185, 28, 28, 0.10);
@@ -123,10 +145,70 @@
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+      /* Suppress spatial motion, blur, scaling, and infinite ambient loops while preserving clear color/opacity feedback */
+      .hero::after,
+      .live-beacon::after,
+      .hero-panorama-img,
+      [data-reveal],
+      [data-reveal="pending"],
+      [data-reveal="entering"] {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+      }
+
+      .ops-track,
+      .skip-link,
+      .faq-chevron {
+        transition: none !important;
+      }
+
+      .scene-card:focus-within,
+      .role-card:focus-within,
+      .modality-card:focus-within,
+      .panel-surface:focus-within,
+      .scene-card:hover,
+      .role-card:hover,
+      .modality-card:hover,
+      .panel-surface:hover,
+      .btn-volt:hover,
+      .check-list li:hover,
+      .check-list li:hover .icon-inline,
+      .scene-card:hover .scene-img {
+        transform: none !important;
+      }
+
+      .cockpit-panel.is-switching,
+      .faq-answer:not([hidden]),
+      .is-flashing {
+        animation: reduced-state-fade 120ms ease both !important;
+      }
+
+      @keyframes reduced-state-fade {
+        from { opacity: 0.72; }
+        to { opacity: 1; }
+      }
+
+      .btn,
+      .cockpit-tab,
+      .sim-action-btn,
+      .ops-pillar-btn,
+      .arrow-btn,
+      .theme-toggle-btn,
+      .nav-links a,
+      .field input,
+      .field select,
+      .field textarea,
+      .scene-card,
+      .role-card,
+      .modality-card,
+      .panel-surface,
+      .faq-item,
+      .check-list li,
+      .mini-stat-value,
+      body {
+        transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease, opacity 120ms ease !important;
       }
     }
 
@@ -157,12 +239,21 @@
       background: var(--bg-canvas);
       color: var(--text-primary);
       font-family: var(--font-sans);
-      font-size: 1rem;
-      line-height: 1.55;
+      font-size: var(--text-body);
+      line-height: var(--body-leading);
+      letter-spacing: var(--body-tracking);
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
       overflow-x: hidden;
       transition: background 180ms ease, color 180ms ease;
+    }
+
+    h1, h2, h3, .faq-trigger span {
+      text-wrap: balance;
+    }
+
+    p, .check-list li, .faq-answer, .live-log, .role-boundary-note, .roles-shared-note {
+      text-wrap: pretty;
     }
 
     a {
@@ -177,7 +268,9 @@
     }
 
     .tabular-nums {
+      font-family: var(--font-mono);
       font-variant-numeric: tabular-nums;
+      letter-spacing: -0.015em;
     }
 
     .sr-only {
@@ -192,12 +285,45 @@
       border: 0;
     }
 
+    .skip-link {
+      position: fixed;
+      top: 12px;
+      left: 16px;
+      z-index: 100;
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 10px 16px;
+      border-radius: var(--radius-pill);
+      background: var(--accent-volt);
+      color: var(--text-on-volt);
+      font-weight: 600;
+      font-size: var(--text-sm);
+      text-decoration: none;
+      transform: translateY(-160%);
+      transition: transform 150ms var(--ease-out-expo);
+    }
+
+    .skip-link:focus,
+    .skip-link:focus-visible {
+      transform: translateY(0);
+      outline: 2px solid var(--text-primary);
+      outline-offset: 2px;
+    }
+
     .container {
       width: 100%;
       max-width: 1240px;
       margin: 0 auto;
-      padding-left: 20px;
-      padding-right: 20px;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    @media (min-width: 380px) {
+      .container {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
     }
 
     @media (min-width: 768px) {
@@ -242,7 +368,9 @@
       align-items: center;
       text-decoration: none;
       flex-shrink: 0;
-      padding: 6px 0;
+      min-height: 44px;
+      min-width: 44px;
+      padding: 8px 0;
     }
 
     .brand-svg {
@@ -260,14 +388,18 @@
     .nav-links {
       display: none;
       align-items: center;
-      gap: 26px;
+      gap: 14px;
       list-style: none;
       margin: 0;
       padding: 0;
     }
 
     .nav-links a {
-      font-size: 0.9375rem;
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 8px;
+      font-size: var(--text-ui);
       font-weight: 500;
       color: var(--text-secondary);
       text-decoration: none;
@@ -284,37 +416,27 @@
       gap: 8px;
     }
 
-    .nav-secondary-link {
+    .nav-actions .btn-sm {
       display: none;
-      font-size: 0.9375rem;
-      font-weight: 500;
-      color: var(--text-secondary);
-      text-decoration: none;
-      padding: 10px 14px;
-      border-radius: var(--radius-pill);
-      transition: color 160ms ease, background 160ms ease;
     }
 
-    .nav-secondary-link:hover {
-      color: var(--text-primary);
-      background: var(--bg-elevated);
+    @media (min-width: 380px) {
+      .nav-actions .btn-sm {
+        display: inline-flex;
+      }
     }
 
     .theme-toggle-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      min-width: 44px;
-      min-height: 44px;
-      padding: 0 10px;
-      border-radius: var(--radius-pill);
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      border-radius: var(--radius-control);
       border: 1px solid var(--border-strong);
       background: var(--bg-surface);
       color: var(--text-primary);
-      font-family: var(--font-sans);
-      font-size: 0.875rem;
-      font-weight: 500;
       cursor: pointer;
       transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
     }
@@ -322,19 +444,6 @@
     .theme-toggle-btn:hover {
       background: var(--bg-elevated);
       border-color: var(--border-hover);
-    }
-
-    .theme-toggle-label {
-      display: none;
-    }
-
-    @media (min-width: 640px) {
-      .theme-toggle-btn {
-        padding: 0 14px;
-      }
-      .theme-toggle-label {
-        display: inline;
-      }
     }
 
     .mobile-menu-btn {
@@ -352,7 +461,6 @@
 
     @media (min-width: 1024px) {
       .nav-links { display: flex; }
-      .nav-secondary-link { display: inline-flex; }
       .mobile-menu-btn { display: none; }
     }
 
@@ -399,7 +507,7 @@
       padding: 0 20px;
       border-radius: var(--radius-pill);
       font-family: var(--font-sans);
-      font-size: 0.9375rem;
+      font-size: var(--text-ui);
       font-weight: 600;
       letter-spacing: -0.01em;
       text-decoration: none;
@@ -418,7 +526,7 @@
     @media (min-width: 480px) {
       .btn-sm {
         padding: 0 16px;
-        font-size: 0.875rem;
+        font-size: var(--text-sm);
       }
     }
 
@@ -449,10 +557,11 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      width: fit-content;
       min-height: 26px;
       padding: 3px 10px;
       border-radius: var(--radius-pill);
-      font-size: 0.75rem;
+      font-size: var(--text-badge);
       font-weight: 600;
       line-height: 1.2;
       border: 1px solid transparent;
@@ -502,17 +611,18 @@
 
     .section-title {
       margin: 0 0 14px;
-      font-size: clamp(1.75rem, 3.2vw, 2.5rem);
-      font-weight: 600;
+      font-family: var(--font-display);
+      font-size: var(--text-h1);
+      font-weight: 700;
       line-height: 1.12;
-      letter-spacing: -0.028em;
+      letter-spacing: -0.026em;
       color: var(--text-primary);
       text-wrap: balance;
     }
 
     .section-lead {
       margin: 0;
-      font-size: 1.0625rem;
+      font-size: var(--text-lead);
       line-height: 1.6;
       color: var(--text-secondary);
       max-width: 62ch;
@@ -532,60 +642,119 @@
     }
 
     .hero-copy {
-      max-width: 820px;
-      margin-bottom: 40px;
+      max-width: 840px;
+      margin: 0 auto 32px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .hero-title {
-      margin: 0 0 20px;
-      font-size: clamp(2.25rem, 5.2vw, 3.85rem);
-      font-weight: 600;
-      line-height: 1.05;
-      letter-spacing: -0.035em;
+      margin: 0 0 16px;
+      font-family: var(--font-display);
+      font-size: var(--text-display);
+      font-weight: 700;
+      line-height: 1.07;
+      letter-spacing: -0.032em;
       color: var(--text-primary);
       text-wrap: balance;
     }
 
     .hero-subtitle {
-      margin: 0 0 28px;
-      font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
-      line-height: 1.55;
+      margin: 0 0 24px;
+      font-size: var(--text-lead);
+      line-height: 1.6;
       color: var(--text-secondary);
-      max-width: 60ch;
+      max-width: 58ch;
     }
 
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
+      justify-content: center;
       gap: 12px;
     }
 
     .hero-assurance {
-      margin: 18px 0 0;
-      font-size: 0.875rem;
+      margin: 16px 0 0;
+      font-size: var(--text-sm);
       color: var(--text-secondary);
       display: flex;
       flex-wrap: wrap;
+      justify-content: center;
       gap: 8px 20px;
     }
 
     .hero-assurance span {
       display: inline-flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 8px;
+      text-align: left;
     }
 
     .hero-assurance svg {
       flex-shrink: 0;
+      margin-top: 3px;
+    }
+
+    .hero-panorama-stage {
+      position: relative;
+    }
+
+    .hero-panorama-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      max-height: 460px;
+      border-radius: var(--radius-hero);
+      overflow: hidden;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-inset);
+    }
+
+    .hero-panorama-frame::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(9, 9, 11, 0.08) 0%, rgba(9, 9, 11, 0.25) 52%, rgba(9, 9, 11, 0.86) 100%);
+      pointer-events: none;
+    }
+
+    html.light .hero-panorama-frame::after {
+      background: linear-gradient(180deg, rgba(9, 9, 11, 0.04) 0%, rgba(9, 9, 11, 0.14) 56%, rgba(244, 244, 245, 0.92) 100%);
+    }
+
+    .hero-panorama-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 32%;
+      display: block;
     }
 
     /* ---------------- Interactive Cockpit Workbench (Hero Product Proof) ---------------- */
     .cockpit-shell {
+      position: relative;
+      z-index: 2;
+      max-width: 1120px;
+      margin: -40px auto 0;
       background: var(--bg-surface);
       border: 1px solid var(--border-strong);
       border-radius: var(--radius-hero);
       overflow: hidden;
+      box-shadow: 0 24px 56px rgba(0, 0, 0, 0.50);
+    }
+
+    html.light .cockpit-shell {
+      box-shadow: 0 20px 48px rgba(9, 9, 11, 0.14);
+    }
+
+    @media (min-width: 960px) {
+      .cockpit-shell {
+        margin-top: -104px;
+      }
     }
 
     .cockpit-topbar {
@@ -604,7 +773,7 @@
       flex-wrap: wrap;
       align-items: center;
       gap: 10px;
-      font-size: 0.875rem;
+      font-size: var(--text-sm);
     }
 
     .cockpit-box-name {
@@ -631,7 +800,7 @@
       background: var(--bg-surface);
       color: var(--text-secondary);
       font-family: var(--font-sans);
-      font-size: 0.875rem;
+      font-size: var(--text-sm);
       font-weight: 500;
       cursor: pointer;
       transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
@@ -666,25 +835,19 @@
     .cockpit-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 16px;
+      gap: 24px;
     }
 
     @media (min-width: 960px) {
       .cockpit-grid {
-        grid-template-columns: 1.55fr 1fr;
+        grid-template-columns: 1.5fr 1fr;
         align-items: start;
+        gap: 28px;
       }
     }
 
     .cockpit-card {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-card);
-      padding: 18px;
-    }
-
-    html.light .cockpit-card {
-      background: var(--bg-inset);
+      padding: 4px 0;
     }
 
     .cockpit-card-head {
@@ -693,7 +856,8 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     @media (min-width: 640px) {
@@ -708,30 +872,38 @@
 
     .cockpit-card-title {
       margin: 0;
-      font-size: 1rem;
+      font-family: var(--font-display);
+      font-size: var(--text-subhead);
       font-weight: 600;
+      line-height: 1.3;
       letter-spacing: -0.015em;
     }
 
     .cockpit-card-sub {
       margin: 2px 0 0;
-      font-size: 0.8125rem;
+      font-size: var(--text-xs);
       color: var(--text-secondary);
+      max-width: 62ch;
+    }
+
+    .cockpit-card-sub.has-top-gap {
+      margin-top: 12px;
+    }
+
+    .cockpit-card-sub.has-bottom-gap {
+      margin-bottom: 14px;
     }
 
     .class-list {
       display: grid;
-      gap: 10px;
     }
 
     .class-row {
       display: grid;
       grid-template-columns: 1fr;
       gap: 10px;
-      padding: 14px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-control);
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     @media (min-width: 640px) {
@@ -743,7 +915,8 @@
     }
 
     .class-time {
-      font-size: 1rem;
+      font-family: var(--font-mono);
+      font-size: var(--text-ui);
       font-weight: 600;
       color: var(--text-primary);
       min-width: 56px;
@@ -751,14 +924,16 @@
 
     .class-meta-title {
       font-weight: 600;
-      font-size: 0.9375rem;
+      font-size: var(--text-ui);
       color: var(--text-primary);
+      overflow-wrap: break-word;
     }
 
     .class-meta-coach {
-      font-size: 0.8125rem;
+      font-size: var(--text-xs);
       color: var(--text-secondary);
       margin-top: 2px;
+      overflow-wrap: break-word;
     }
 
     .class-right {
@@ -776,7 +951,8 @@
     }
 
     .capacity-pill {
-      font-size: 0.875rem;
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
       font-weight: 600;
       color: var(--text-primary);
     }
@@ -786,7 +962,7 @@
       padding: 0 14px;
       border-radius: var(--radius-pill);
       border: 1px solid var(--border-strong);
-      background: var(--bg-surface);
+      background: var(--bg-elevated);
       color: var(--text-primary);
       font-family: var(--font-sans);
       font-size: 0.8125rem;
@@ -802,13 +978,14 @@
     }
 
     .sim-action-btn.is-primary {
-      background: var(--accent-volt);
-      border-color: var(--volt-btn-border);
-      color: var(--text-on-volt);
+      background: var(--accent-volt-tint);
+      border-color: var(--accent-border);
+      color: var(--accent-text);
     }
 
     .sim-action-btn.is-primary:hover:not(:disabled) {
-      background: var(--accent-volt-hover);
+      background: var(--accent-volt);
+      border-color: var(--volt-btn-border);
       color: var(--text-on-volt);
     }
 
@@ -819,12 +996,11 @@
     }
 
     .live-log {
-      margin-top: 12px;
+      margin-top: 14px;
       padding: 12px 14px;
       border-radius: var(--radius-control);
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      font-size: 0.875rem;
+      background: var(--bg-inset);
+      font-size: var(--text-sm);
       color: var(--text-secondary);
       min-height: 46px;
       display: flex;
@@ -832,25 +1008,35 @@
       gap: 10px;
     }
 
-    html.dark .live-log {
-      background: var(--bg-inset);
-    }
-
     .live-log strong {
       color: var(--text-primary);
       font-weight: 600;
     }
 
-    /* Mini side panel / Athlete phone card */
+    /* Front-desk athlete summary & Athlete phone preview */
+    .desk-athlete-card {
+      padding-top: 20px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    @media (min-width: 960px) {
+      .desk-athlete-card {
+        padding-top: 4px;
+        padding-left: 28px;
+        border-top: 0;
+        border-left: 1px solid var(--border-subtle);
+      }
+    }
+
     .phone-frame {
-      background: var(--bg-canvas);
+      background: var(--bg-inset);
       border: 1px solid var(--border-strong);
-      border-radius: 20px;
-      padding: 16px;
+      border-radius: var(--radius-card);
+      padding: 18px;
     }
 
     html.light .phone-frame {
-      background: var(--bg-surface);
+      background: var(--bg-inset);
     }
 
     .phone-header {
@@ -859,45 +1045,68 @@
       justify-content: space-between;
       gap: 8px;
       padding-bottom: 12px;
-      margin-bottom: 12px;
       border-bottom: 1px solid var(--border-subtle);
     }
 
     .credit-summary {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 14px;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     .mini-stat {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-control);
-      padding: 10px 12px;
+      padding: 0;
     }
 
-    html.light .mini-stat {
-      background: var(--bg-inset);
+    .mini-stat + .mini-stat {
+      padding-left: 16px;
+      border-left: 1px solid var(--border-subtle);
     }
 
     .mini-stat-label {
-      font-size: 0.75rem;
+      font-size: var(--text-badge);
       color: var(--text-secondary);
       display: block;
     }
 
     .mini-stat-value {
-      font-size: 1.0625rem;
+      font-family: var(--font-mono);
+      font-size: var(--text-subhead);
       font-weight: 600;
       color: var(--text-primary);
       margin-top: 2px;
       display: block;
+      transition: color 180ms ease;
+    }
+
+    .mini-stat-value.is-updated {
+      color: var(--accent-text);
     }
 
     /* Ledger table in Caja tab */
+    .table-scroll-hint {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      margin: 12px 0 6px;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+    }
+
+    @media (min-width: 640px) {
+      .table-scroll-hint {
+        display: none;
+      }
+    }
+
     .table-wrap {
       overflow-x: auto;
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch;
       border-radius: var(--radius-control);
       border: 1px solid var(--border-subtle);
       background: var(--bg-surface);
@@ -906,7 +1115,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.875rem;
+      font-size: var(--text-sm);
       min-width: 560px;
     }
 
@@ -935,15 +1144,102 @@
       text-align: right;
     }
 
-    /* ---------------- Comparison / Pain vs Order ---------------- */
+    /* ---------------- Photographic Scene Cards & Pain vs Order ---------------- */
     .divider-top {
       border-top: 1px solid var(--border-subtle);
+    }
+
+    .scenes-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media (min-width: 860px) {
+      .scenes-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .scene-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .scene-media {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      background: var(--bg-inset);
+    }
+
+    .scene-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 360ms var(--ease-out-expo);
+    }
+
+    .scene-card:hover .scene-img {
+      transform: scale(1.03);
+    }
+
+    .scene-telemetry {
+      padding: 10px 18px;
+      background: var(--bg-inset);
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+    }
+
+    .scene-telemetry strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .scene-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1 1 auto;
+    }
+
+    .scene-title {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: var(--text-h3);
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: -0.018em;
+      color: var(--text-primary);
+    }
+
+    .scene-desc {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: var(--text-ui);
+      max-width: 58ch;
     }
 
     .comparison-grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 16px;
+      margin-top: 20px;
     }
 
     @media (min-width: 860px) {
@@ -953,25 +1249,28 @@
     }
 
     .panel-surface {
-      background: var(--bg-surface);
+      background: var(--bg-inset);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-card);
       padding: 24px;
     }
 
     .panel-elevated {
-      background: var(--bg-card-highlight);
-      border: 1px solid var(--border-strong);
+      background: var(--bg-surface);
+      border: 1px solid var(--accent-border);
       border-radius: var(--radius-card);
       padding: 24px;
     }
 
     .panel-heading {
       margin: 0 0 18px;
-      font-size: 1.1875rem;
+      font-family: var(--font-display);
+      font-size: var(--text-h3);
       font-weight: 600;
-      letter-spacing: -0.02em;
+      line-height: 1.25;
+      letter-spacing: -0.018em;
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
@@ -991,7 +1290,11 @@
       gap: 12px;
       align-items: start;
       color: var(--text-secondary);
-      font-size: 0.9375rem;
+      font-size: var(--text-ui);
+    }
+
+    .check-list li span {
+      max-width: 65ch;
     }
 
     .check-list strong {
@@ -1019,7 +1322,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      font-size: 0.875rem;
+      font-size: var(--text-sm);
     }
 
     .rule-strip-row span:first-child {
@@ -1045,6 +1348,8 @@
       display: flex;
       flex-wrap: nowrap;
       overflow-x: auto;
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch;
       gap: 8px;
       padding-bottom: 4px;
       scrollbar-width: none;
@@ -1063,7 +1368,7 @@
       background: var(--bg-surface);
       color: var(--text-secondary);
       font-family: var(--font-sans);
-      font-size: 0.9375rem;
+      font-size: var(--text-ui);
       font-weight: 500;
       white-space: nowrap;
       cursor: pointer;
@@ -1079,9 +1384,9 @@
     }
 
     .ops-pillar-btn[aria-selected="true"] {
-      background: var(--accent-volt);
-      border-color: var(--volt-btn-border);
-      color: var(--text-on-volt);
+      background: var(--accent-volt-tint);
+      border-color: var(--accent-border);
+      color: var(--accent-text);
       font-weight: 600;
     }
 
@@ -1093,7 +1398,8 @@
     }
 
     .ops-step-counter {
-      font-size: 0.8125rem;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
       color: var(--text-secondary);
       padding: 0 4px;
     }
@@ -1149,9 +1455,10 @@
 
     .ops-slide-title {
       margin: 0 0 10px;
-      font-size: clamp(1.375rem, 2.2vw, 1.75rem);
+      font-family: var(--font-display);
+      font-size: var(--text-h2);
       font-weight: 600;
-      letter-spacing: -0.025em;
+      letter-spacing: -0.022em;
       line-height: 1.18;
       color: var(--text-primary);
     }
@@ -1159,17 +1466,24 @@
     .ops-slide-lead {
       margin: 0 0 20px;
       color: var(--text-secondary);
-      font-size: 0.9375rem;
-      max-width: 50ch;
+      font-size: var(--text-ui);
+      max-width: 52ch;
     }
 
     .ops-proof-box {
-      background: var(--bg-inset);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-card);
-      padding: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-subtle);
       display: grid;
       gap: 14px;
+    }
+
+    @media (min-width: 900px) {
+      .ops-proof-box {
+        padding-top: 0;
+        padding-left: 32px;
+        border-top: 0;
+        border-left: 1px solid var(--border-subtle);
+      }
     }
 
     .ops-proof-head {
@@ -1178,10 +1492,12 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     .ops-proof-title {
-      font-size: 0.9375rem;
+      font-size: var(--text-ui);
       font-weight: 600;
       color: var(--text-primary);
     }
@@ -1189,27 +1505,29 @@
     .timeline-row {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 10px;
+      gap: 14px;
+      padding: 4px 0 12px;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     @media (min-width: 560px) {
       .timeline-row {
         grid-template-columns: 1fr 1fr;
+        gap: 20px;
       }
     }
 
     .timeline-block {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-control);
-      padding: 12px 14px;
+      padding: 4px 0;
       display: grid;
       gap: 4px;
     }
 
-    .timeline-block.is-future {
-      border-style: dashed;
-      border-color: var(--border-strong);
+    @media (min-width: 560px) {
+      .timeline-block.is-future {
+        padding-left: 20px;
+        border-left: 1px dashed var(--border-strong);
+      }
     }
 
     .coach-row {
@@ -1218,10 +1536,12 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      padding: 10px 12px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-control);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .coach-row:last-child {
+      border-bottom: 0;
     }
 
     .coach-toggle-group {
@@ -1234,7 +1554,7 @@
       padding: 0 12px;
       border-radius: var(--radius-pill);
       border: 1px solid var(--border-strong);
-      background: var(--bg-surface);
+      background: var(--bg-elevated);
       color: var(--text-secondary);
       font-family: var(--font-sans);
       font-size: 0.8125rem;
@@ -1256,104 +1576,102 @@
 
     .audit-step {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 10px 14px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-control);
-      font-size: 0.875rem;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: var(--text-sm);
     }
 
-    .audit-step.is-voided {
-      opacity: 0.72;
+    .audit-step:last-child {
+      border-bottom: 0;
     }
 
-    /* ---------------- Roles Switcher ---------------- */
-    .role-tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-
-    .role-tab {
-      min-height: 44px;
-      padding: 0 18px;
-      border-radius: var(--radius-pill);
-      border: 1px solid var(--border-strong);
-      background: var(--bg-surface);
+    .audit-step.is-voided strong {
       color: var(--text-secondary);
-      font-family: var(--font-sans);
-      font-size: 0.9375rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+      text-decoration: line-through;
     }
 
-    .role-tab:hover {
-      color: var(--text-primary);
-      border-color: var(--border-hover);
+    /* ---------------- Roles Open Comparison Grid ---------------- */
+    .roles-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
     }
 
-    .role-tab[aria-selected="true"] {
-      background: var(--accent-volt);
-      border-color: var(--volt-btn-border);
-      color: var(--text-on-volt);
-      font-weight: 600;
+    @media (min-width: 860px) {
+      .roles-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
-    .role-stage {
+    .role-card {
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-card);
       padding: 24px;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
-    @media (min-width: 860px) {
-      .role-stage {
-        grid-template-columns: 1.15fr 1fr;
-        padding: 32px;
-      }
+    .role-card-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
     }
 
     .role-panel-title {
-      margin: 0 0 10px;
-      font-size: 1.375rem;
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: var(--text-h3);
       font-weight: 600;
-      letter-spacing: -0.02em;
+      line-height: 1.25;
+      letter-spacing: -0.018em;
     }
 
     .role-panel-summary {
-      margin: 0 0 20px;
+      margin: 0;
       color: var(--text-secondary);
-      font-size: 0.9375rem;
-      max-width: 56ch;
+      font-size: var(--text-ui);
+      max-width: 62ch;
     }
 
-    .role-permissions {
-      display: grid;
-      gap: 12px;
-      padding: 18px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-control);
-    }
-
-    html.light .role-permissions {
-      background: var(--bg-inset);
-    }
-
-    .role-scope-note {
-      margin-top: 16px;
+    .role-card .check-list {
       padding-top: 14px;
       border-top: 1px solid var(--border-subtle);
-      font-size: 0.875rem;
+      gap: 10px;
+    }
+
+    .role-boundary-note {
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: var(--text-xs);
       color: var(--text-secondary);
+      max-width: 62ch;
+    }
+
+    .role-boundary-note strong {
+      color: var(--text-primary);
+    }
+
+    .roles-shared-note {
+      margin-top: 16px;
+      padding: 14px 18px;
+      border-radius: var(--radius-control);
+      background: var(--bg-inset);
+      border: 1px solid var(--border-subtle);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+    }
+
+    .roles-shared-note strong {
+      color: var(--text-primary);
     }
 
     /* ---------------- Plan Modalities ---------------- */
@@ -1381,19 +1699,23 @@
 
     .modality-name {
       margin: 0;
-      font-size: 1.125rem;
+      font-family: var(--font-display);
+      font-size: var(--text-h3);
       font-weight: 600;
-      letter-spacing: -0.015em;
+      line-height: 1.25;
+      letter-spacing: -0.018em;
     }
 
     .modality-desc {
       margin: 0;
       color: var(--text-secondary);
-      font-size: 0.9375rem;
+      font-size: var(--text-ui);
+      max-width: 60ch;
     }
 
     .modality-example {
-      font-size: 0.875rem;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
       color: var(--text-primary);
       border-top: 1px solid var(--border-subtle);
       padding-top: 14px;
@@ -1405,6 +1727,7 @@
       display: grid;
       grid-template-columns: 1fr;
       gap: 16px;
+      margin-top: 32px;
     }
 
     @media (min-width: 860px) {
@@ -1414,10 +1737,34 @@
     }
 
     /* ---------------- FAQ ---------------- */
+    .faq-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    @media (min-width: 900px) {
+      .faq-layout {
+        grid-template-columns: 0.85fr 1.15fr;
+        gap: 48px;
+      }
+
+      .faq-layout .section-header {
+        position: sticky;
+        top: 96px;
+        margin-bottom: 0;
+      }
+    }
+
+    .faq-aside-cta {
+      margin-top: 24px;
+    }
+
     .faq-list {
       display: grid;
       gap: 10px;
-      max-width: 860px;
+      width: 100%;
     }
 
     .faq-item {
@@ -1469,8 +1816,9 @@
     .faq-answer {
       padding: 0 20px 18px;
       color: var(--text-secondary);
-      font-size: 0.9375rem;
-      line-height: 1.6;
+      font-size: var(--text-body);
+      line-height: 1.62;
+      max-width: 66ch;
     }
 
     .faq-answer[hidden] {
@@ -1494,6 +1842,10 @@
         padding: 40px;
         gap: 40px;
       }
+    }
+
+    .demo-layout .section-lead {
+      margin-bottom: 24px;
     }
 
     .form-grid {
@@ -1523,7 +1875,7 @@
     }
 
     .field label {
-      font-size: 0.875rem;
+      font-size: var(--text-sm);
       font-weight: 500;
       line-height: 1.35;
       color: var(--text-primary);
@@ -1543,11 +1895,6 @@
       font-size: 1rem; /* 16px floor for mobile iOS Safari */
       line-height: 1.4;
       transition: border-color 150ms ease, background 150ms ease;
-    }
-
-    .field input,
-    .field select {
-      height: 46px;
     }
 
     .field select {
@@ -1597,11 +1944,47 @@
       background: var(--mint-bg);
       border: 1px solid var(--mint-border);
       color: var(--text-primary);
-      font-size: 0.9375rem;
+      font-size: var(--text-ui);
+      overflow-wrap: break-word;
+      word-break: break-word;
+      display: grid;
+      gap: 12px;
     }
 
     .form-feedback[hidden] {
       display: none;
+    }
+
+    .form-feedback-summary {
+      margin: 0;
+      padding: 10px 12px;
+      border-radius: var(--radius-control);
+      background: var(--bg-inset);
+      border: 1px solid var(--border-subtle);
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+      font-family: var(--font-mono);
+    }
+
+    .form-feedback-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ops-action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      padding-top: 4px;
+    }
+
+    .ops-action-msg {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
     }
 
     /* ---------------- Footer ---------------- */
@@ -1625,19 +2008,26 @@
       }
     }
 
+    .site-footer .brand-svg {
+      height: 24px;
+    }
+
     .footer-links {
       display: flex;
       flex-wrap: wrap;
-      gap: 20px;
-      font-size: 0.875rem;
+      gap: 12px;
+      font-size: var(--text-sm);
       color: var(--text-secondary);
     }
 
     .footer-links a {
       text-decoration: none;
       min-height: 44px;
+      min-width: 44px;
+      padding: 0 8px;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
     }
 
     .footer-links a:hover {
@@ -1645,13 +2035,354 @@
     }
 
     .footer-meta {
-      font-size: 0.875rem;
+      font-size: var(--text-sm);
       color: var(--text-secondary);
       margin: 10px 0 0;
+    }
+
+    /* ---------------- Overdrive: Reactive Canvas Field, View Transitions & Scroll Depth ---------------- */
+    .scroll-progress-track {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      z-index: 60;
+      pointer-events: none;
+      background: transparent;
+    }
+
+    .scroll-progress-fill {
+      width: 100%;
+      height: 100%;
+      background: var(--accent-border);
+      transform-origin: left center;
+      transform: scaleX(var(--scroll-progress, 0));
+    }
+
+    @supports (animation-timeline: scroll()) {
+      .scroll-progress-fill {
+        animation: overdrive-scroll-progress linear both;
+        animation-timeline: scroll(root);
+      }
+      @keyframes overdrive-scroll-progress {
+        from { transform: scaleX(0); }
+        to { transform: scaleX(1); }
+      }
+    }
+
+    @supports (animation-timeline: view()) {
+      .hero-panorama-img {
+        animation: overdrive-panorama-depth linear both;
+        animation-timeline: view();
+        animation-range: exit-crossing 0% exit 100%;
+      }
+      @keyframes overdrive-panorama-depth {
+        from {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        to {
+          transform: translate3d(0, 22px, 0) scale(1.06);
+        }
+      }
+    }
+
+    ::view-transition-old(cockpit-panel),
+    ::view-transition-new(cockpit-panel) {
+      animation-duration: 280ms;
+      animation-timing-function: var(--ease-out-expo);
+    }
+
+    ::view-transition-old(cockpit-panel) {
+      animation-name: overdrive-vt-out;
+    }
+
+    ::view-transition-new(cockpit-panel) {
+      animation-name: overdrive-vt-in;
+    }
+
+    @keyframes overdrive-vt-out {
+      from { opacity: 1; transform: translateY(0) scale(1); }
+      to { opacity: 0; transform: translateY(-6px) scale(0.992); }
+    }
+
+    @keyframes overdrive-vt-in {
+      from { opacity: 0; transform: translateY(8px) scale(0.992); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .hero {
+      position: relative;
+      isolation: isolate;
+      overflow-x: clip;
+      --hero-x: 50%;
+      --hero-y: 26%;
+    }
+
+    .hero-telemetry-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      display: block;
+      mask-image: linear-gradient(180deg, var(--bg-canvas) 0%, var(--bg-canvas) 72%, transparent 100%);
+      -webkit-mask-image: linear-gradient(180deg, var(--bg-canvas) 0%, var(--bg-canvas) 72%, transparent 100%);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: -40px 0 0;
+      z-index: -2;
+      pointer-events: none;
+      background:
+        radial-gradient(560px circle at var(--hero-x) var(--hero-y), rgba(193, 244, 41, 0.08), transparent 68%),
+        radial-gradient(480px circle at calc(100% - var(--hero-x)) 36%, rgba(24, 255, 200, 0.06), transparent 66%);
+      animation: hero-ambient-drift 11s ease-in-out infinite alternate;
+    }
+
+    html.light .hero::after {
+      background:
+        radial-gradient(560px circle at var(--hero-x) var(--hero-y), rgba(193, 244, 41, 0.18), transparent 68%),
+        radial-gradient(480px circle at calc(100% - var(--hero-x)) 36%, rgba(4, 120, 87, 0.07), transparent 66%);
+    }
+
+    @keyframes hero-ambient-drift {
+      0% {
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+      100% {
+        transform: translate3d(0, 12px, 0) scale(1.04);
+      }
+    }
+
+    /* Live beacon pulse in cockpit topbar */
+    .live-beacon {
+      position: relative;
+      display: inline-flex;
+      width: 9px;
+      height: 9px;
+      border-radius: 9999px;
+      background: var(--mint);
+      flex-shrink: 0;
+    }
+
+    .live-beacon::after {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      border-radius: 9999px;
+      border: 1.5px solid var(--mint);
+      opacity: 0;
+      animation: beacon-ping 2.6s var(--ease-out-expo) infinite;
+    }
+
+    @keyframes beacon-ping {
+      0% {
+        transform: scale(0.85);
+        opacity: 0.75;
+      }
+      80%, 100% {
+        transform: scale(1.85);
+        opacity: 0;
+      }
+    }
+
+    /* Interactive reading hover states on cards, rows, and checklist items */
+    .scene-card,
+    .role-card,
+    .modality-card,
+    .panel-surface,
+    .faq-item {
+      transition:
+        transform 240ms var(--ease-out-expo),
+        border-color 200ms ease,
+        background-color 200ms ease,
+        box-shadow 240ms var(--ease-out-expo);
+    }
+
+    .scene-card:focus-within,
+    .role-card:focus-within,
+    .modality-card:focus-within,
+    .panel-surface:focus-within {
+      transform: translateY(-3px);
+      border-color: var(--border-hover);
+      background-color: var(--bg-elevated);
+      box-shadow: 0 14px 32px rgba(9, 9, 11, 0.36);
+    }
+
+    html.light .scene-card:focus-within,
+    html.light .role-card:focus-within,
+    html.light .modality-card:focus-within,
+    html.light .panel-surface:focus-within {
+      background-color: var(--bg-surface);
+      border-color: var(--border-hover);
+      box-shadow: 0 12px 28px rgba(9, 9, 11, 0.08);
+    }
+
+    @media (hover: hover) {
+      .scene-card:hover,
+      .role-card:hover,
+      .modality-card:hover,
+      .panel-surface:hover {
+        transform: translateY(-3px);
+        border-color: var(--border-hover);
+        background-color: var(--bg-elevated);
+        box-shadow: 0 14px 32px rgba(9, 9, 11, 0.36);
+      }
+
+      html.light .scene-card:hover,
+      html.light .role-card:hover,
+      html.light .modality-card:hover,
+      html.light .panel-surface:hover {
+        background-color: var(--bg-surface);
+        border-color: var(--border-hover);
+        box-shadow: 0 12px 28px rgba(9, 9, 11, 0.08);
+      }
+
+      .role-card:hover .role-panel-title,
+      .modality-card:hover .modality-name,
+      .scene-card:hover .scene-title {
+        color: var(--accent-text);
+        transition: color 180ms ease;
+      }
+
+      .check-list li:hover {
+        color: var(--text-primary);
+        background-color: rgba(255, 255, 255, 0.03);
+        transform: translateX(4px);
+      }
+
+      html.light .check-list li:hover {
+        background-color: rgba(9, 9, 11, 0.035);
+      }
+
+      .check-list li:hover .icon-inline {
+        transform: scale(1.14);
+      }
+
+      .class-row:hover,
+      .coach-row:hover,
+      .audit-step:hover,
+      tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.025);
+      }
+
+      html.light .class-row:hover,
+      html.light .coach-row:hover,
+      html.light .audit-step:hover,
+      html.light tbody tr:hover {
+        background-color: rgba(9, 9, 11, 0.028);
+      }
+    }
+
+    .faq-item:has(.faq-trigger[aria-expanded="true"]) {
+      border-color: var(--border-hover);
+    }
+
+    .check-list li {
+      padding: 4px 6px;
+      margin: -4px -6px;
+      border-radius: var(--radius-control);
+      transition: background-color 180ms ease, color 180ms ease, transform 180ms var(--ease-out-expo);
+    }
+
+    .check-list li .icon-inline {
+      transition: transform 200ms var(--ease-out-expo);
+    }
+
+    .class-row,
+    .coach-row,
+    .audit-step,
+    tbody tr {
+      transition: background-color 160ms ease;
+    }
+
+    /* Smooth panel & FAQ transitions + live telemetry pulse */
+    .cockpit-panel.is-switching {
+      animation: panel-enter 260ms var(--ease-out-expo) both;
+    }
+
+    @keyframes panel-enter {
+      0% {
+        opacity: 0.25;
+        transform: translateY(8px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .faq-answer:not([hidden]) {
+      animation: faq-open 240ms var(--ease-out-expo) both;
+    }
+
+    @keyframes faq-open {
+      0% {
+        opacity: 0.2;
+        transform: translateY(-4px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .is-flashing {
+      animation: telemetry-flash 440ms var(--ease-out-expo);
+    }
+
+    @keyframes telemetry-flash {
+      0% {
+        transform: scale(1);
+      }
+      35% {
+        transform: scale(1.04);
+        filter: brightness(1.22);
+      }
+      100% {
+        transform: scale(1);
+        filter: brightness(1);
+      }
+    }
+
+    /* One-shot Scroll Reveal (triggers once when scrolling to target section, then stays permanently visible) */
+    [data-reveal="pending"] {
+      transform: translateY(22px);
+    }
+
+    [data-reveal="entering"] {
+      animation: section-reveal-once 620ms var(--ease-out-expo) both;
+      animation-delay: calc(var(--stagger, 0) * 85ms);
+    }
+
+    [data-reveal="shown"] {
+      opacity: 1;
+      transform: none;
+    }
+
+    @keyframes section-reveal-once {
+      0% {
+        opacity: 0.12;
+        transform: translateY(22px) scale(0.985);
+        filter: blur(2.5px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
     }
   </style>
 </head>
 <body>
+  <div class="scroll-progress-track" aria-hidden="true">
+    <div class="scroll-progress-fill" id="scroll-progress-fill"></div>
+  </div>
+  <a href="#top" class="skip-link">Saltar al contenido principal</a>
 
   <header class="site-header">
     <div class="container nav-inner">
@@ -1690,7 +2421,6 @@
           type="button"
           class="theme-toggle-btn"
           id="theme-toggle"
-          aria-pressed="false"
           aria-label="Cambiar a modo claro"
           title="Cambiar entre modo oscuro y modo claro"
         >
@@ -1700,7 +2430,6 @@
               <path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
             </svg>
           </span>
-          <span class="theme-toggle-label" id="theme-toggle-label">Modo claro</span>
         </button>
 
         <a href="#pedir-demo" class="btn btn-volt btn-sm">Pedí una demo</a>
@@ -1735,15 +2464,16 @@
   </header>
 
   <main id="top">
-    <!-- 1. HERO + DEMO INTERACTIVA EN VIVO -->
+    <!-- 1. HERO + VENTANA PANORÁMICA + DEMO INTERACTIVA EN VIVO -->
     <section class="hero" aria-labelledby="hero-heading">
+      <canvas id="hero-telemetry-canvas" class="hero-telemetry-canvas" aria-hidden="true"></canvas>
       <div class="container">
         <div class="hero-copy">
           <h1 id="hero-heading" class="hero-title">
-            Ordená las clases, los cupos y la caja de tu box sin planillas ni mensajes sueltos.
+            Ordená las clases, los cupos y la caja de tu&nbsp;box.
           </h1>
           <p class="hero-subtitle">
-            Centris reúne en una sola operación diaria tus horarios recurrentes, las reservas de cada atleta, la asistencia del coach en piso y la caja auditable del mostrador.
+            Horarios recurrentes, reservas sin sobrecupos, asistencia del coach en piso y caja auditable en una sola operación&nbsp;diaria.
           </p>
           <div class="hero-actions">
             <a href="#pedir-demo" class="btn btn-volt">Pedí una demo para tu box</a>
@@ -1756,7 +2486,7 @@
             </span>
             <span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-              El atleta con membresía vigente entrena aunque pague después
+              Entrena con membresía vigente aunque pague después
             </span>
             <span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
@@ -1765,21 +2495,35 @@
           </div>
         </div>
 
-        <!-- Tablero interactivo fiel al sistema Centris -->
-        <div id="demo-interactiva" class="cockpit-shell" aria-label="Vista previa interactiva de Centris">
+        <div class="hero-panorama-stage">
+          <div class="hero-panorama-frame">
+            <img
+              src="./assets/hero-box-panorama.jpeg"
+              width="1600"
+              height="893"
+              alt="Piso de entrenamiento de un box en hora pico con atletas en tarimas de levantamiento y coach tomando asistencia desde el celular"
+              class="hero-panorama-img"
+              decoding="sync"
+              fetchpriority="high"
+            />
+          </div>
+
+          <!-- Tablero interactivo fiel al sistema Centris encastrado sobre la ventana panorámica -->
+          <div id="demo-interactiva" class="cockpit-shell" aria-label="Vista previa interactiva de Centris">
           <div class="cockpit-topbar">
             <div class="cockpit-context">
+              <span class="live-beacon" aria-hidden="true"></span>
               <span class="cockpit-box-name">Box Centris Norte</span>
               <span class="cockpit-tz tabular-nums">Hora local · Buenos Aires (GMT-3)</span>
             </div>
             <div class="cockpit-tabs" role="tablist" aria-label="Pantallas operativas de ejemplo">
-              <button type="button" class="cockpit-tab" role="tab" aria-selected="true" aria-controls="panel-clases" id="tab-clases">
+              <button type="button" class="cockpit-tab" role="tab" aria-selected="true" tabindex="0" aria-controls="panel-clases" id="tab-clases">
                 Clases y cupos
               </button>
-              <button type="button" class="cockpit-tab" role="tab" aria-selected="false" aria-controls="panel-caja" id="tab-caja">
+              <button type="button" class="cockpit-tab" role="tab" aria-selected="false" tabindex="-1" aria-controls="panel-caja" id="tab-caja">
                 Caja y morosos
               </button>
-              <button type="button" class="cockpit-tab" role="tab" aria-selected="false" aria-controls="panel-atleta" id="tab-atleta">
+              <button type="button" class="cockpit-tab" role="tab" aria-selected="false" tabindex="-1" aria-controls="panel-atleta" id="tab-atleta">
                 Celular del atleta
               </button>
             </div>
@@ -1792,8 +2536,8 @@
                 <div class="cockpit-card">
                   <div class="cockpit-card-head">
                     <div>
-                      <h2 class="cockpit-card-title">Grilla del día · Recepción y piso</h2>
-                      <p class="cockpit-card-sub">Probá anotar una reserva en mostrador o liberar un lugar y mirá el cupo en tiempo real.</p>
+                      <div class="cockpit-card-title">Grilla del día · Recepción y piso</div>
+                      <p class="cockpit-card-sub">Probá anotar a Sofía Peralta desde mostrador o liberar su lugar y mirá cómo cambian el cupo y sus créditos en tiempo&nbsp;real.</p>
                     </div>
                     <span class="badge badge-zinc tabular-nums">Datos ilustrativos</span>
                   </div>
@@ -1809,7 +2553,7 @@
                         <span class="capacity-pill tabular-nums" data-cap-label>14/16</span>
                         <span class="badge badge-mint" data-status-badge>Con lugar</span>
                         <button type="button" class="sim-action-btn is-primary" data-sim-toggle="funcional">
-                          Anotar en mostrador
+                          Anotar a Sofía
                         </button>
                       </div>
                     </div>
@@ -1839,32 +2583,32 @@
                         <span class="capacity-pill tabular-nums" data-cap-label>9/12</span>
                         <span class="badge badge-mint" data-status-badge>Con lugar</span>
                         <button type="button" class="sim-action-btn is-primary" data-sim-toggle="oly">
-                          Anotar en mostrador
+                          Anotar a Sofía
                         </button>
                       </div>
                     </div>
                   </div>
 
                   <div class="live-log" id="sim-feedback" role="status" aria-live="polite">
-                    <span>Elegí una clase para simular una reserva desde mostrador con control real de cupo.</span>
+                    <span>Elegí una clase con lugar para anotar a Sofía Peralta desde mostrador y descontar su crédito en vivo.</span>
                   </div>
                 </div>
 
-                <div class="phone-frame" aria-label="Resumen de un atleta en el mostrador">
+                <div class="desk-athlete-card" aria-label="Ficha de Sofía Peralta en mostrador">
                   <div class="phone-header">
                     <div>
-                      <div style="font-weight: 600; font-size: 0.9375rem;">Sofía Peralta</div>
-                      <div style="font-size: 0.8125rem; color: var(--text-secondary);">Plan 3 veces por semana</div>
+                      <div class="class-meta-title">Sofía Peralta</div>
+                      <div class="class-meta-coach">Ficha en mostrador · Plan 3x semana</div>
                     </div>
                     <span class="badge badge-amber">Saldo pendiente</span>
                   </div>
                   <div class="credit-summary">
                     <div class="mini-stat">
                       <span class="mini-stat-label">Créditos semana</span>
-                      <span class="mini-stat-value tabular-nums" id="sofia-credits">2 / 3</span>
+                      <span class="mini-stat-value tabular-nums" id="sofia-credits" data-base-credits="2">2 / 3</span>
                     </div>
                     <div class="mini-stat">
-                      <span class="mini-stat-label">Saldo</span>
+                      <span class="mini-stat-label">Saldo en caja</span>
                       <span class="mini-stat-value tabular-nums">$ 28.000</span>
                     </div>
                   </div>
@@ -1874,12 +2618,12 @@
                       <span class="badge badge-mint">Vigente hasta 30/11</span>
                     </div>
                     <div class="rule-strip-row">
-                      <span>¿Puede reservar hoy?</span>
-                      <strong>Sí, tiene vigencia y créditos</strong>
+                      <span>Estado deportivo hoy</span>
+                      <strong id="sofia-booking-status">Habilitada (2 créditos libres)</strong>
                     </div>
                   </div>
-                  <p style="margin: 12px 0 0; font-size: 0.8125rem; color: var(--text-secondary);">
-                    El saldo figura en Caja para cobrarlo en mostrador, sin trabar el ingreso del atleta a entrenar.
+                  <p class="cockpit-card-sub has-top-gap">
+                    El saldo figura en Caja para cobrarlo en mostrador, sin trabar el ingreso del atleta a&nbsp;entrenar.
                   </p>
                 </div>
               </div>
@@ -1890,12 +2634,13 @@
               <div class="cockpit-card">
                 <div class="cockpit-card-head">
                   <div>
-                    <h2 class="cockpit-card-title">Movimientos de caja y estado de cuentas</h2>
-                    <p class="cockpit-card-sub">Los pagos registrados quedan firmes. Si hubo un error de carga, un Administrador registra una anulación con motivo.</p>
+                    <div class="cockpit-card-title">Movimientos de caja y estado de cuentas</div>
+                    <p class="cockpit-card-sub">Los pagos registrados quedan firmes. Si hubo un error de carga, un Administrador registra una anulación con&nbsp;motivo.</p>
                   </div>
                   <span class="badge badge-mint">Historial auditable</span>
                 </div>
 
+                <div class="table-scroll-hint" aria-hidden="true">Deslizá para ver precios y saldos →</div>
                 <div class="table-wrap">
                   <table>
                     <thead>
@@ -1950,15 +2695,15 @@
                 <div class="phone-frame">
                   <div class="phone-header">
                     <div>
-                      <div style="font-weight: 600;">Tu semana en Box Norte</div>
-                      <div style="font-size: 0.8125rem; color: var(--text-secondary);">Período lunes a domingo</div>
+                      <div class="class-meta-title">Sofía Peralta · Celular</div>
+                      <div class="class-meta-coach">Box Centris Norte · Lunes a domingo</div>
                     </div>
-                    <span class="badge badge-mint">Activa</span>
+                    <span class="badge badge-mint">Membresía activa</span>
                   </div>
                   <div class="credit-summary">
                     <div class="mini-stat">
                       <span class="mini-stat-label">Créditos disponibles</span>
-                      <span class="mini-stat-value tabular-nums" id="athlete-credits-count">3</span>
+                      <span class="mini-stat-value tabular-nums" id="athlete-credits-count">2 / 3</span>
                     </div>
                     <div class="mini-stat">
                       <span class="mini-stat-label">Anticipación máxima</span>
@@ -1966,20 +2711,27 @@
                     </div>
                   </div>
 
-                  <div class="class-row" style="grid-template-columns: 1fr auto; align-items: center;">
+                  <div class="class-row">
+                    <div class="class-time tabular-nums">18:00</div>
                     <div>
-                      <div class="class-meta-title tabular-nums">Hoy · 19:30 · Funcional</div>
-                      <div class="class-meta-coach" id="athlete-booking-sub">Quedan 3 de 16 cupos · Cancelación sin cargo hasta 17:30</div>
+                      <div class="class-meta-title">Funcional · Sala funcional</div>
+                      <div class="class-meta-coach" id="athlete-booking-sub">Quedan 2 de 16 cupos · Cancelación sin cargo hasta 16:00</div>
                     </div>
-                    <button type="button" class="sim-action-btn is-primary" id="athlete-book-btn">
-                      Reservar lugar
-                    </button>
+                    <div class="class-right">
+                      <button type="button" class="sim-action-btn is-primary" id="athlete-book-btn">
+                        Reservar lugar
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="live-log" id="athlete-sim-feedback" role="status" aria-live="polite">
+                    <span>Desde el navegador del celular el atleta reserva o cancela en término sin instalar apps.</span>
                   </div>
                 </div>
 
                 <div class="cockpit-card">
-                  <h2 class="cockpit-card-title">Autogestión simple desde el celular</h2>
-                  <p class="cockpit-card-sub" style="margin-bottom: 14px;">Sin mensajes de WhatsApp ni esperar que alguien responda en mostrador.</p>
+                  <div class="cockpit-card-title">Autogestión simple desde el celular</div>
+                  <p class="cockpit-card-sub has-bottom-gap">Sin mensajes de WhatsApp ni esperar que alguien responda en&nbsp;mostrador.</p>
                   <ul class="check-list">
                     <li>
                       <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
@@ -1999,69 +2751,92 @@
             </div>
           </div>
         </div>
+        </div>
       </div>
     </section>
 
-    <!-- 2. DEL CAOS DIARIO AL ORDEN OPERATIVO -->
+    <!-- 2. TRES ESCENAS REALES DEL BOX (MOSTRADOR, PISO Y CELULAR) -->
     <section class="divider-top" aria-labelledby="problema-heading">
       <div class="container">
         <div class="section-header">
-          <h2 id="problema-heading" class="section-title">Dejar atrás el cuaderno y el Excel cuando el box empieza a crecer.</h2>
+          <h2 id="problema-heading" class="section-title">Dejar atrás el cuaderno y el WhatsApp cuando el box crece.</h2>
           <p class="section-lead">
-            Cuando manejás horarios, renovaciones y pagos parciales a mano, los errores aparecen justo en la hora pico.
+            Tres escenas simultáneas en hora pico, conectadas bajo las mismas reglas&nbsp;operativas.
           </p>
         </div>
 
-        <div class="comparison-grid">
-          <div class="panel-surface">
-            <h3 class="panel-heading">
-              Lo que pasa todos los días sin sistema
-              <span class="badge badge-coral">Fricción</span>
-            </h3>
-            <ul class="check-list">
-              <li>
-                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                <span><strong>Sobrecupos por WhatsApp:</strong> dos atletas escriben al mismo tiempo y aparecen 18 personas en una clase de 16.</span>
-              </li>
-              <li>
-                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                <span><strong>Cobros difíciles de auditar:</strong> pagos parciales que se anotan en notas sueltas o se borran sin saber quién los tocó.</span>
-              </li>
-              <li>
-                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                <span><strong>Permisos mezclados:</strong> para que el coach tome lista termina viendo la caja del gimnasio y los precios de cada atleta.</span>
-              </li>
-              <li>
-                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                <span><strong>Confusión con recuperos y bajas:</strong> no queda claro si una clase cancelada devolvió crédito o si una baja liberó reservas futuras.</span>
-              </li>
-            </ul>
-          </div>
+        <div class="scenes-grid">
+          <article class="scene-card">
+            <div class="scene-media">
+              <img
+                src="./assets/scene-mostrador.jpg"
+                width="960"
+                height="536"
+                loading="lazy"
+                decoding="async"
+                alt="Recepcionista en el mostrador del box registrando el ingreso y pago parcial de un atleta"
+                class="scene-img"
+              />
+            </div>
+            <div class="scene-telemetry">
+              <span><strong>Mostrador</strong> · Recepción</span>
+              <span class="badge badge-amber">Saldo $ 28.000 · Habilitada</span>
+            </div>
+            <div class="scene-body">
+              <h3 class="scene-title">Puerta ágil y caja sin borrados</h3>
+              <p class="scene-desc">
+                Renovás el día 1 y registrás pagos totales o parciales cuando el socio abona en mostrador, sin frenarlo en la entrada ni perder rastro&nbsp;contable.
+              </p>
+            </div>
+          </article>
 
-          <div class="panel-elevated">
-            <h3 class="panel-heading">
-              Cómo trabaja Centris en tu box
-              <span class="badge badge-mint">Reglas claras</span>
-            </h3>
-            <ul class="check-list">
-              <li>
-                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                <span><strong>Cupo protegido al reservar:</strong> cada reserva descuenta lugar y crédito en el acto. Si no hay cupo, nadie entra por encima del máximo.</span>
-              </li>
-              <li>
-                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                <span><strong>Cobro desacoplado de la puerta:</strong> renovás la membresía el día 1 y registrás pagos totales o parciales cuando el atleta abona en mostrador.</span>
-              </li>
-              <li>
-                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                <span><strong>Cuatro roles separados y combinables:</strong> cada persona de tu equipo ve solo las pantallas que necesita según sus funciones en ese box.</span>
-              </li>
-              <li>
-                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                <span><strong>Todo en tu hora local:</strong> cortes semanales de lunes a domingo, vencimientos y ventanas de cancelación siguen el reloj real de tu box.</span>
-              </li>
-            </ul>
-          </div>
+          <article class="scene-card">
+            <div class="scene-media">
+              <img
+                src="./assets/scene-piso-coach.jpg"
+                width="960"
+                height="536"
+                loading="lazy"
+                decoding="async"
+                alt="Coach en el piso de entrenamiento pasando lista desde su celular frente a la estructura de barras"
+                class="scene-img"
+              />
+            </div>
+            <div class="scene-telemetry">
+              <span><strong>Piso</strong> · Coach</span>
+              <span class="badge badge-mint">19:00 WOD · Ventana 24h</span>
+            </div>
+            <div class="scene-body">
+              <h3 class="scene-title">Lista en un toque, caja privada</h3>
+              <p class="scene-desc">
+                El coach marca presentes desde el celular durante la clase y tiene 24 horas para corregir, sin ver precios, deudas ni movimientos de&nbsp;caja.
+              </p>
+            </div>
+          </article>
+
+          <article class="scene-card">
+            <div class="scene-media">
+              <img
+                src="./assets/scene-celular-atleta.jpg"
+                width="960"
+                height="536"
+                loading="lazy"
+                decoding="async"
+                alt="Atleta sentado en un cajón de salto reservando su turno desde el navegador del celular"
+                class="scene-img"
+              />
+            </div>
+            <div class="scene-telemetry">
+              <span><strong>Celular</strong> · Atleta</span>
+              <span class="badge badge-mint">18:00 Funcional · 14/16</span>
+            </div>
+            <div class="scene-body">
+              <h3 class="scene-title">Reserva directa sin instalar apps</h3>
+              <p class="scene-desc">
+                Cada reserva descuenta cupo y crédito en el acto desde el navegador móvil. Si cancela en término, el lugar vuelve solo a la&nbsp;grilla.
+              </p>
+            </div>
+          </article>
         </div>
       </div>
     </section>
@@ -2072,16 +2847,16 @@
         <div class="section-header">
           <h2 id="operacion-heading" class="section-title">Cada parte de la gestión diaria resuelta con reglas exactas.</h2>
           <p class="section-lead">
-            Recorré los cuatro bloques que sostienen la operación de un box sin sorpresas ni parches.
+            Recorré los cuatro bloques que sostienen la operación de un box sin sorpresas ni&nbsp;parches.
           </p>
         </div>
 
         <div class="ops-controls-bar">
-          <div class="ops-rail" role="tablist" aria-label="Pilares operativos de Centris">
-            <button type="button" class="ops-pillar-btn" role="tab" aria-selected="true" data-ops-index="0">Horarios y clases</button>
-            <button type="button" class="ops-pillar-btn" role="tab" aria-selected="false" data-ops-index="1">Membresías y vigencias</button>
-            <button type="button" class="ops-pillar-btn" role="tab" aria-selected="false" data-ops-index="2">Asistencia en piso</button>
-            <button type="button" class="ops-pillar-btn" role="tab" aria-selected="false" data-ops-index="3">Caja y morosos</button>
+          <div class="ops-rail" id="ops-rail" role="tablist" aria-label="Pilares operativos de Centris">
+            <button type="button" class="ops-pillar-btn" role="tab" id="ops-tab-0" aria-controls="ops-panel-0" aria-selected="true" tabindex="0" data-ops-index="0">Horarios y clases</button>
+            <button type="button" class="ops-pillar-btn" role="tab" id="ops-tab-1" aria-controls="ops-panel-1" aria-selected="false" tabindex="-1" data-ops-index="1">Membresías y vigencias</button>
+            <button type="button" class="ops-pillar-btn" role="tab" id="ops-tab-2" aria-controls="ops-panel-2" aria-selected="false" tabindex="-1" data-ops-index="2">Asistencia en piso</button>
+            <button type="button" class="ops-pillar-btn" role="tab" id="ops-tab-3" aria-controls="ops-panel-3" aria-selected="false" tabindex="-1" data-ops-index="3">Caja y morosos</button>
           </div>
 
           <div class="ops-nav-arrows">
@@ -2098,20 +2873,16 @@
         <div class="ops-viewport" aria-live="polite">
           <div class="ops-track" id="ops-track">
             <!-- Slide 1: Horarios y clases -->
-            <article class="ops-slide" role="tabpanel" aria-label="Horarios y clases">
+            <article class="ops-slide" id="ops-panel-0" role="tabpanel" aria-labelledby="ops-tab-0">
               <div>
                 <h3 class="ops-slide-title">Horarios recurrentes y clases editables sin romper la semana</h3>
                 <p class="ops-slide-lead">
-                  Armás tu grilla una sola vez y Centris materializa las clases automáticamente en la hora local del box.
+                  Armás tu grilla una sola vez y Centris materializa las clases en la hora local del&nbsp;box.
                 </p>
                 <ul class="check-list">
                   <li>
                     <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
                     <span><strong>Edición puntual:</strong> cambiá coach, horario o cupo de un día sin tocar el resto del mes.</span>
-                  </li>
-                  <li>
-                    <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span><strong>Reglas por reloj real:</strong> anticipación de reserva y ventana de cancelación configurables.</span>
                   </li>
                   <li>
                     <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
@@ -2135,28 +2906,24 @@
                     <strong class="tabular-nums">120 min antes</strong>
                   </div>
                 </div>
-                <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+                <div class="ops-action-row">
                   <button type="button" class="sim-action-btn" id="ops-suspend-btn">Simular suspensión de clase</button>
-                  <span style="font-size: 0.8125rem; color: var(--text-secondary);" id="ops-suspend-msg">14 atletas anotados con crédito consumido.</span>
+                  <span class="ops-action-msg" id="ops-suspend-msg" role="status" aria-live="polite">14 atletas anotados con crédito consumido.</span>
                 </div>
               </div>
             </article>
 
             <!-- Slide 2: Membresías y vigencias -->
-            <article class="ops-slide" role="tabpanel" aria-label="Membresías y vigencias">
+            <article class="ops-slide" id="ops-panel-1" role="tabpanel" aria-labelledby="ops-tab-1" aria-hidden="true" inert>
               <div>
                 <h3 class="ops-slide-title">Membresías encadenadas sin huecos ni solapamientos</h3>
                 <p class="ops-slide-lead">
-                  Cada membresía congela las reglas vigentes cuando se asignó, aunque mañana actualices precios en tu catálogo.
+                  Cada membresía congela sus reglas al asignarse, aunque mañana actualices precios en tu&nbsp;catálogo.
                 </p>
                 <ul class="check-list">
                   <li>
                     <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span><strong>Renovación consecutiva:</strong> el nuevo período arranca al día siguiente de vencer el actual.</span>
-                  </li>
-                  <li>
-                    <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span><strong>Ajustes excepcionales:</strong> aplicá precio con beca/descuento o sumá créditos extra en casos puntuales.</span>
+                    <span><strong>Renovación y becas:</strong> encadená el próximo período al vencimiento y sumá descuentos o créditos extra puntuales.</span>
                   </li>
                   <li>
                     <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
@@ -2172,38 +2939,34 @@
                 </div>
                 <div class="timeline-row">
                   <div class="timeline-block">
-                    <span class="badge badge-mint" style="width: fit-content;">Vigente</span>
+                    <span class="badge badge-mint">Vigente</span>
                     <strong class="tabular-nums">01/11 – 30/11</strong>
-                    <span style="font-size: 0.8125rem; color: var(--text-secondary);">Plan 3x/sem · +1 crédito extra</span>
+                    <span class="ops-action-msg">Plan 3x/sem · +1 crédito extra</span>
                   </div>
                   <div class="timeline-block is-future" id="ops-future-block">
-                    <span class="badge badge-amber" style="width: fit-content;" id="ops-future-tag">Renovación encadenada</span>
+                    <span class="badge badge-amber" id="ops-future-tag">Renovación encadenada</span>
                     <strong class="tabular-nums">01/12 – 31/12</strong>
-                    <span style="font-size: 0.8125rem; color: var(--text-secondary);">Sin superposición de fechas</span>
+                    <span class="ops-action-msg">Sin superposición de fechas</span>
                   </div>
                 </div>
-                <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+                <div class="ops-action-row">
                   <button type="button" class="sim-action-btn" id="ops-baja-btn">Simular baja anticipada</button>
-                  <span style="font-size: 0.8125rem; color: var(--text-secondary);" id="ops-baja-msg">Las reservas posteriores se cancelan y liberan cupo al instante.</span>
+                  <span class="ops-action-msg" id="ops-baja-msg" role="status" aria-live="polite">Las reservas posteriores se cancelan y liberan cupo al instante.</span>
                 </div>
               </div>
             </article>
 
             <!-- Slide 3: Asistencia en piso -->
-            <article class="ops-slide" role="tabpanel" aria-label="Asistencia en piso">
+            <article class="ops-slide" id="ops-panel-2" role="tabpanel" aria-labelledby="ops-tab-2" aria-hidden="true" inert>
               <div>
                 <h3 class="ops-slide-title">Lista en piso en un toque y 24 horas para corregir</h3>
                 <p class="ops-slide-lead">
-                  El coach marca presentes desde el celular durante la clase y recepción puede anotar llegadas espontáneas en puerta.
+                  El coach marca presentes desde el celular y recepción anota llegadas espontáneas en&nbsp;puerta.
                 </p>
                 <ul class="check-list">
                   <li>
                     <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
                     <span><strong>Corrección segura:</strong> ventana de <span class="tabular-nums">24 horas</span> post-clase para rectificar marcas antes de consolidar ausencias.</span>
-                  </li>
-                  <li>
-                    <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span><strong>Reserva en mostrador:</strong> recepción suma atletas espontáneos aunque falten pocos minutos.</span>
                   </li>
                   <li>
                     <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
@@ -2220,26 +2983,29 @@
                 <div class="coach-row">
                   <span><strong>Lucía Ferreyra</strong></span>
                   <div class="coach-toggle-group">
-                    <button type="button" class="att-btn" data-att-row="1" data-state="presente" aria-pressed="true">Presente</button>
-                    <button type="button" class="att-btn" data-att-row="1" data-state="ausente" aria-pressed="false">Ausente</button>
+                    <button type="button" class="att-btn" data-att-row="1" data-athlete="Lucía Ferreyra" data-state="presente" aria-pressed="true">Presente</button>
+                    <button type="button" class="att-btn" data-att-row="1" data-athlete="Lucía Ferreyra" data-state="ausente" aria-pressed="false">Ausente</button>
                   </div>
                 </div>
                 <div class="coach-row">
                   <span><strong>Tomás Benítez</strong></span>
                   <div class="coach-toggle-group">
-                    <button type="button" class="att-btn" data-att-row="2" data-state="presente" aria-pressed="false">Presente</button>
-                    <button type="button" class="att-btn" data-att-row="2" data-state="ausente" aria-pressed="true">Ausente</button>
+                    <button type="button" class="att-btn" data-att-row="2" data-athlete="Tomás Benítez" data-state="presente" aria-pressed="false">Presente</button>
+                    <button type="button" class="att-btn" data-att-row="2" data-athlete="Tomás Benítez" data-state="ausente" aria-pressed="true">Ausente</button>
                   </div>
+                </div>
+                <div class="ops-action-row">
+                  <span class="ops-action-msg" id="ops-att-msg" role="status" aria-live="polite">Marcá presente o ausente para probar la planilla móvil del coach (sin datos de caja).</span>
                 </div>
               </div>
             </article>
 
             <!-- Slide 4: Caja y morosos -->
-            <article class="ops-slide" role="tabpanel" aria-label="Caja y morosos">
+            <article class="ops-slide" id="ops-panel-3" role="tabpanel" aria-labelledby="ops-tab-3" aria-hidden="true" inert>
               <div>
                 <h3 class="ops-slide-title">Caja inmutable, saldos parciales y cero borrados silenciosos</h3>
                 <p class="ops-slide-lead">
-                  Registrás cobros en efectivo, transferencia o posnet asociados a cada membresía, con listado directo de morosos.
+                  Cobros en efectivo, transferencia o posnet asociados a cada membresía, con listado directo de&nbsp;morosos.
                 </p>
                 <ul class="check-list">
                   <li>
@@ -2250,31 +3016,31 @@
                     <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
                     <span><strong>Anulaciones auditadas:</strong> un error de carga solo se corrige por anulación con motivo y autoría.</span>
                   </li>
-                  <li>
-                    <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span><strong>Aislamiento por box:</strong> cada sede opera con su propia moneda y sus propios registros aislados.</span>
-                  </li>
                 </ul>
               </div>
 
               <div class="ops-proof-box">
                 <div class="ops-proof-head">
                   <span class="ops-proof-title">Rastro contable · Membresía #408</span>
-                  <span class="badge badge-mint tabular-nums">Saldo actual: $ 0</span>
+                  <span class="badge badge-mint tabular-nums" id="ops-ledger-badge">Saldo actual: $ 0</span>
                 </div>
-                <div class="audit-step is-voided">
+                <div class="audit-step" id="ops-audit-row-1">
                   <div>
                     <strong class="tabular-nums">#1041 · $ 48.000</strong>
-                    <div style="font-size: 0.75rem; color: var(--text-secondary);">Motivo anulación: "Importe duplicado"</div>
+                    <div class="ops-action-msg" id="ops-audit-sub-1">Efectivo · Cargado por error en mostrador</div>
                   </div>
-                  <span class="badge badge-coral">Anulado (Admin)</span>
+                  <span class="badge badge-mint" id="ops-audit-tag-1">Firme</span>
                 </div>
-                <div class="audit-step">
+                <div class="audit-step" id="ops-audit-row-2" hidden>
                   <div>
                     <strong class="tabular-nums">#1042 · $ 48.000</strong>
-                    <div style="font-size: 0.75rem; color: var(--text-secondary);">Transferencia · Cargado por Recepción</div>
+                    <div class="ops-action-msg">Transferencia · Cobro real registrado</div>
                   </div>
                   <span class="badge badge-mint">Firme</span>
+                </div>
+                <div class="ops-action-row">
+                  <button type="button" class="sim-action-btn" id="ops-audit-btn">Simular anulación con motivo</button>
+                  <span class="ops-action-msg" id="ops-audit-msg" role="status" aria-live="polite">Los cobros no se borran: probá cómo corrige un error un Administrador.</span>
                 </div>
               </div>
             </article>
@@ -2289,44 +3055,106 @@
         <div class="section-header">
           <h2 id="roles-heading" class="section-title">Cuatro roles claros, una sola cuenta por persona.</h2>
           <p class="section-lead">
-            En un box chico el dueño también da clases y abre la caja; en un centro más grande cada rol trabaja separado. Con Centris combinás los roles que quieras dentro de cada box sin crear usuarios duplicados.
+            En un box chico el dueño también da clases y abre la caja; en uno grande cada rol trabaja separado sin duplicar&nbsp;usuarios.
           </p>
         </div>
 
-        <div class="role-tabs" role="tablist" aria-label="Roles operativos de Centris">
-          <button type="button" class="role-tab" role="tab" aria-selected="true" data-role="admin" id="role-tab-admin">Administrador</button>
-          <button type="button" class="role-tab" role="tab" aria-selected="false" data-role="recep" id="role-tab-recep">Recepcionista</button>
-          <button type="button" class="role-tab" role="tab" aria-selected="false" data-role="coach" id="role-tab-coach">Coach</button>
-          <button type="button" class="role-tab" role="tab" aria-selected="false" data-role="atleta" id="role-tab-atleta">Atleta</button>
-        </div>
-
-        <div class="role-stage" id="role-stage" aria-live="polite">
-          <div>
-            <h3 class="role-panel-title" id="role-title">Administrador · Dueño o coordinador</h3>
-            <p class="role-panel-summary" id="role-summary">
-              Tiene el control total del box: arma el catálogo de planes, tipos de clase y horarios, asigna permisos al equipo y audita cada movimiento de caja.
-            </p>
-            <div class="role-scope-note" id="role-boundary">
-              <strong>Cuenta única multi-sede:</strong> si administrás dos sucursales o entrenás en otro box que usa Centris, entrás con el mismo email y elegís el box activo al iniciar.
+        <div class="roles-grid">
+          <article class="role-card">
+            <div class="role-card-head">
+              <h3 class="role-panel-title">Administrador</h3>
+              <span class="badge badge-zinc">Dueño o coordinador</span>
             </div>
-          </div>
-          <div class="role-permissions">
-            <div style="font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary);">Acciones principales habilitadas</div>
-            <ul class="check-list" id="role-list">
+            <p class="role-panel-summary">
+              Define el catálogo de planes, horarios y permisos del equipo, y audita cada movimiento de&nbsp;caja.
+            </p>
+            <ul class="check-list">
               <li>
                 <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>Configura nombre, zona horaria, anticipación de reserva y ventana de cancelación del box.</span>
+                <span>Configura reglas horarias, planes, becas/descuentos y bajas anticipadas.</span>
               </li>
               <li>
                 <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>Crea planes, ajusta precios con becas o descuentos y ejecuta bajas anticipadas.</span>
-              </li>
-              <li>
-                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>Anula pagos erróneos dejando motivo obligatorio y cancela clases devolviendo créditos.</span>
+                <span>Anula cobros erróneos con motivo obligatorio y suspende clases devolviendo créditos.</span>
               </li>
             </ul>
-          </div>
+            <div class="role-boundary-note">
+              <strong>Alcance exclusivo:</strong> único rol habilitado para anular cobros o cambiar reglas base del gimnasio.
+            </div>
+          </article>
+
+          <article class="role-card">
+            <div class="role-card-head">
+              <h3 class="role-panel-title">Recepcionista</h3>
+              <span class="badge badge-zinc">Atención en mostrador</span>
+            </div>
+            <p class="role-panel-summary">
+              Resuelve la puerta diaria: da de alta atletas, renueva membresías, cobra y sigue&nbsp;morosos.
+            </p>
+            <ul class="check-list">
+              <li>
+                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Da de alta socios, encadena renovaciones y registra pagos totales o parciales.</span>
+              </li>
+              <li>
+                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Anota reservas espontáneas en mostrador y suma créditos extra puntuales.</span>
+              </li>
+            </ul>
+            <div class="role-boundary-note">
+              <strong>Separación de caja:</strong> registra cobros nuevos, pero no puede editar ni borrar pagos anteriores.
+            </div>
+          </article>
+
+          <article class="role-card">
+            <div class="role-card-head">
+              <h3 class="role-panel-title">Coach</h3>
+              <span class="badge badge-mint">Privacidad de caja</span>
+            </div>
+            <p class="role-panel-summary">
+              Abre la clase en su celular con la nómina ordenada en piso y marca presentes en un&nbsp;toque.
+            </p>
+            <ul class="check-list">
+              <li>
+                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Consulta solo sus clases asignadas y la lista de atletas inscriptos en el turno.</span>
+              </li>
+              <li>
+                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Rectifica asistencia dentro de las 24 horas posteriores al cierre de la clase.</span>
+              </li>
+            </ul>
+            <div class="role-boundary-note">
+              <strong>Reserva financiera:</strong> un coach puro nunca ve precios, saldos pendientes ni movimientos de caja.
+            </div>
+          </article>
+
+          <article class="role-card">
+            <div class="role-card-head">
+              <h3 class="role-panel-title">Atleta</h3>
+              <span class="badge badge-zinc">Navegador móvil</span>
+            </div>
+            <p class="role-panel-summary">
+              Reserva desde el navegador de su celular sin instalar apps y consulta sus créditos y&nbsp;vigencia.
+            </p>
+            <ul class="check-list">
+              <li>
+                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Activa su contraseña al primer ingreso y reserva viendo cupos reales disponibles.</span>
+              </li>
+              <li>
+                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Cancela a tiempo recuperando su crédito y revisa su historial de pagos.</span>
+              </li>
+            </ul>
+            <div class="role-boundary-note">
+              <strong>Sin bloqueo en puerta:</strong> mientras tenga vigencia y créditos, reserva aunque regularice su saldo después.
+            </div>
+          </article>
+        </div>
+
+        <div class="roles-shared-note">
+          <strong>Roles combinables y cuenta multi-sede:</strong> una misma persona puede sumar varios roles en el box (ej. <em>Administrador + Coach</em> o <em>Coach + Atleta</em>) y cambiar de sede activa con un solo email sin duplicar cuentas.
         </div>
       </div>
     </section>
@@ -2348,7 +3176,7 @@
             </div>
             <h3 class="modality-name">Cupo fijo por semana</h3>
             <p class="modality-desc">
-              Ideal para atletas de 2 o 3 veces por semana. Los créditos se renuevan en cada período de lunes a domingo dentro de la vigencia de la membresía, sin acumulación de semanas anteriores.
+              Ideal para atletas de 2 o 3 veces por semana. Los créditos se renuevan en cada período de lunes a domingo dentro de la vigencia de la membresía, sin acumulación de semanas&nbsp;anteriores.
             </p>
             <div class="modality-example tabular-nums">
               Ejemplo: Plan 3x semana · 30 días de vigencia · 3 créditos por semana.
@@ -2361,7 +3189,7 @@
             </div>
             <h3 class="modality-name">Bolsa total de créditos</h3>
             <p class="modality-desc">
-              Entregás una cantidad fija de créditos para gastar libremente durante toda la vigencia de la membresía (por ejemplo, un pack mensual o trimestral sin tope semanal).
+              Entregás una cantidad fija de créditos para gastar libremente durante toda la vigencia de la membresía (por ejemplo, un pack mensual o trimestral sin tope&nbsp;semanal).
             </p>
             <div class="modality-example tabular-nums">
               Ejemplo: Pack 12 clases · 30 días de vigencia · 12 créditos totales.
@@ -2374,7 +3202,7 @@
             </div>
             <h3 class="modality-name">Pase libre sin conteo de créditos</h3>
             <p class="modality-desc">
-              Para atletas con pase libre mensual. Pueden reservar todas las clases que quieran dentro de la vigencia y sin superponerse en el mismo horario.
+              Para atletas con pase libre mensual. Pueden reservar todas las clases que quieran dentro de la vigencia y sin superponerse en el mismo&nbsp;horario.
             </p>
             <div class="modality-example tabular-nums">
               Ejemplo: Libre Full · 30 días de vigencia · reservas ilimitadas.
@@ -2382,7 +3210,7 @@
           </article>
         </div>
 
-        <div class="scope-split" style="margin-top: 32px;">
+        <div class="scope-split">
           <div class="panel-surface">
             <h3 class="panel-heading">
               Qué queda resuelto desde el día uno
@@ -2431,14 +3259,18 @@
     <!-- 6. PREGUNTAS FRECUENTES -->
     <section id="preguntas" class="divider-top" aria-labelledby="faq-heading">
       <div class="container">
-        <div class="section-header">
-          <h2 id="faq-heading" class="section-title">Preguntas frecuentes antes de pasar tu box a Centris.</h2>
-          <p class="section-lead">
-            Respuestas directas sobre cómo arrancás, cómo manejás los cobros y qué ve cada persona de tu equipo.
-          </p>
-        </div>
+        <div class="faq-layout">
+          <div class="section-header">
+            <h2 id="faq-heading" class="section-title">Preguntas frecuentes antes de pasar tu box a Centris.</h2>
+            <p class="section-lead">
+              Respuestas directas sobre cómo arrancás, cómo manejás los cobros y qué ve cada persona de tu equipo.
+            </p>
+            <div class="faq-aside-cta">
+              <a href="#pedir-demo" class="btn btn-ghost">Consultar un caso puntual de tu box</a>
+            </div>
+          </div>
 
-        <div class="faq-list">
+          <div class="faq-list">
           <div class="faq-item">
             <button type="button" class="faq-trigger" aria-expanded="true" aria-controls="faq-1" id="faq-btn-1">
               <span>¿Si un atleta no pagó todavía el mes, queda bloqueado para reservar?</span>
@@ -2488,6 +3320,7 @@
               Hoy realizamos la puesta en marcha de forma acompañada: nos dejás tus datos en el formulario, coordinamos una demo sobre un entorno con tus horarios y planes, y dejamos tu box configurado con su usuario administrador inicial.
             </div>
           </div>
+          </div>
         </div>
       </div>
     </section>
@@ -2498,7 +3331,7 @@
         <div class="demo-layout">
           <div>
             <h2 id="demo-heading" class="section-title">Probá Centris con la grilla real de tu box.</h2>
-            <p class="section-lead" style="margin-bottom: 24px;">
+            <p class="section-lead">
               Contanos cómo organizás hoy tus clases y membresías. Coordinamos una demostración de <span class="tabular-nums">20 minutos</span> para mostrarte el flujo completo de administrador, recepción, coach y atleta.
             </p>
             <ul class="check-list">
@@ -2521,21 +3354,21 @@
             <div class="form-grid-2">
               <div class="field">
                 <label for="box-name">Nombre de tu box o centro</label>
-                <input id="box-name" name="boxName" type="text" placeholder="Ej. Box Norte Funcional" required autocomplete="organization" />
-                <span class="field-error" id="err-box-name" aria-live="polite"></span>
+                <input id="box-name" name="boxName" type="text" maxlength="80" placeholder="Ej. Box Norte Funcional" required autocomplete="organization" aria-describedby="err-box-name" />
+                <span class="field-error" id="err-box-name" role="alert" aria-live="polite"></span>
               </div>
               <div class="field">
                 <label for="contact-name">Tu nombre</label>
-                <input id="contact-name" name="contactName" type="text" placeholder="Ej. Matías López" required autocomplete="name" />
-                <span class="field-error" id="err-contact-name" aria-live="polite"></span>
+                <input id="contact-name" name="contactName" type="text" maxlength="80" placeholder="Ej. Matías López" required autocomplete="name" aria-describedby="err-contact-name" />
+                <span class="field-error" id="err-contact-name" role="alert" aria-live="polite"></span>
               </div>
             </div>
 
             <div class="form-grid-2">
               <div class="field">
                 <label for="contact-channel">Email o WhatsApp</label>
-                <input id="contact-channel" name="contactChannel" type="text" placeholder="Ej. hola@tubox.com o +54 9 11..." required />
-                <span class="field-error" id="err-contact-channel" aria-live="polite"></span>
+                <input id="contact-channel" name="contactChannel" type="text" maxlength="120" placeholder="Ej. hola@tubox.com o +54 9 11..." required autocomplete="email" aria-describedby="err-contact-channel" />
+                <span class="field-error" id="err-contact-channel" role="alert" aria-live="polite"></span>
               </div>
               <div class="field">
                 <label for="athlete-count">Cantidad aproximada de atletas</label>
@@ -2549,12 +3382,12 @@
 
             <div class="field">
               <label for="main-need">¿Qué querés ordenar primero?</label>
-              <textarea id="main-need" name="mainNeed" placeholder="Ej. Reservas por WhatsApp, control de asistencia de coaches y seguimiento de pagos parciales..."></textarea>
+              <textarea id="main-need" name="mainNeed" maxlength="500" placeholder="Ej. Reservas por WhatsApp, control de asistencia de coaches y seguimiento de pagos parciales..."></textarea>
             </div>
 
-            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 14px;">
-              <button type="submit" class="btn btn-volt">Solicitar demo</button>
-              <span style="font-size: 0.8125rem; color: var(--text-secondary);">Versión inicial de demostración · envío simulado localmente.</span>
+            <div class="ops-action-row">
+              <button type="submit" class="btn btn-volt" id="demo-submit-btn">Solicitar demo</button>
+              <span class="ops-action-msg">Modo demostración local · genera un resumen listo para copiar sin enviar datos a terceros.</span>
             </div>
 
             <div class="form-feedback" id="form-feedback" role="status" aria-live="polite" hidden></div>
@@ -2568,7 +3401,7 @@
     <div class="container footer-inner">
       <div>
         <a href="#top" class="brand-link" aria-label="Volver arriba — Centris">
-          <svg class="brand-svg" style="height: 24px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 256" width="940" height="256" role="img" aria-labelledby="title-centris-footer">
+          <svg class="brand-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 256" width="940" height="256" role="img" aria-labelledby="title-centris-footer">
             <title id="title-centris-footer">Centris</title>
             <g>
               <path class="logo-ink" d="M 37.94 180.00 A 104 104 0 0 1 180.00 37.94 L 158.00 76.04 A 60 60 0 0 0 76.04 158.00 Z"/>
@@ -2605,7 +3438,6 @@
       // 0. Unified Dark / Light Theme Switcher
       const rootEl = document.documentElement;
       const themeBtn = document.getElementById("theme-toggle");
-      const themeLabel = document.getElementById("theme-toggle-label");
       const themeIcon = document.getElementById("theme-toggle-icon");
 
       const sunSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>';
@@ -2618,10 +3450,8 @@
         const metaTheme = document.getElementById("meta-theme-color");
         if (metaTheme) metaTheme.setAttribute("content", isLight ? "#F4F4F5" : "#09090B");
         if (themeBtn) {
-          themeBtn.setAttribute("aria-pressed", String(isLight));
           themeBtn.setAttribute("aria-label", isLight ? "Cambiar a modo oscuro" : "Cambiar a modo claro");
         }
-        if (themeLabel) themeLabel.textContent = isLight ? "Modo oscuro" : "Modo claro";
         if (themeIcon) themeIcon.innerHTML = isLight ? moonSvg : sunSvg;
       }
 
@@ -2642,9 +3472,18 @@
         });
       }
 
-      // 1. Mobile navigation drawer
+      // 1. Mobile navigation drawer (with Escape key, outside click, and desktop breakpoint reset)
       const menuBtn = document.getElementById("mobile-menu-toggle");
       const drawer = document.getElementById("mobile-drawer");
+      const siteHeader = document.querySelector(".site-header");
+
+      function closeMobileDrawer(restoreFocus) {
+        if (!menuBtn || !drawer || drawer.hidden) return;
+        menuBtn.setAttribute("aria-expanded", "false");
+        drawer.hidden = true;
+        if (restoreFocus) menuBtn.focus();
+      }
+
       if (menuBtn && drawer) {
         menuBtn.addEventListener("click", function () {
           const isOpen = menuBtn.getAttribute("aria-expanded") === "true";
@@ -2653,126 +3492,318 @@
         });
         drawer.querySelectorAll("a").forEach(function (link) {
           link.addEventListener("click", function () {
-            menuBtn.setAttribute("aria-expanded", "false");
-            drawer.hidden = true;
+            closeMobileDrawer(false);
+          });
+        });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && !drawer.hidden) {
+            closeMobileDrawer(true);
+          }
+        });
+        document.addEventListener("click", function (e) {
+          if (!drawer.hidden && siteHeader && !siteHeader.contains(e.target)) {
+            closeMobileDrawer(false);
+          }
+        });
+        if (window.matchMedia) {
+          window.matchMedia("(min-width: 1024px)").addEventListener("change", function (e) {
+            if (e.matches) closeMobileDrawer(false);
+          });
+        }
+      }
+
+      // Helper: WAI-ARIA Tablist roving tabindex and keyboard navigation (ArrowLeft/ArrowRight/Home/End)
+      function bindTablistKeyboard(tabNodeList, activateAtIndex) {
+        const tabs = Array.prototype.slice.call(tabNodeList);
+        tabs.forEach(function (tab, idx) {
+          tab.addEventListener("keydown", function (e) {
+            let nextIdx = null;
+            if (e.key === "ArrowRight") nextIdx = (idx + 1) % tabs.length;
+            else if (e.key === "ArrowLeft") nextIdx = (idx - 1 + tabs.length) % tabs.length;
+            else if (e.key === "Home") nextIdx = 0;
+            else if (e.key === "End") nextIdx = tabs.length - 1;
+            if (nextIdx !== null) {
+              e.preventDefault();
+              activateAtIndex(nextIdx, true);
+            }
           });
         });
       }
 
-      // 2. Hero cockpit tabs
+      function flashElement(el) {
+        if (!el) return;
+        el.classList.remove("is-flashing");
+        void el.offsetWidth;
+        el.classList.add("is-flashing");
+      }
+
+      const reducedMotionQuery = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+      let reducedMotion = reducedMotionQuery ? reducedMotionQuery.matches : false;
+      if (reducedMotionQuery && reducedMotionQuery.addEventListener) {
+        reducedMotionQuery.addEventListener("change", function (e) {
+          reducedMotion = e.matches;
+          if (reducedMotion) {
+            document.querySelectorAll("[data-reveal]").forEach(function (el) {
+              el.setAttribute("data-reveal", "shown");
+            });
+          }
+        });
+      }
+      let emitTelemetryPulse = function () {};
+
+      // 2. Hero cockpit tabs with View Transitions API + clean fallback
       const cockpitTabs = document.querySelectorAll(".cockpit-tab");
       const cockpitPanels = document.querySelectorAll(".cockpit-panel");
-      cockpitTabs.forEach(function (tab) {
+      const cockpitBody = document.querySelector(".cockpit-body");
+      let activeCockpitVT = null;
+
+      function applyCockpitTabDOM(activeIdx, moveFocus, useCssSwitchAnim) {
+        cockpitTabs.forEach(function (t, i) {
+          const isSelected = i === activeIdx;
+          t.setAttribute("aria-selected", String(isSelected));
+          t.setAttribute("tabindex", isSelected ? "0" : "-1");
+          if (isSelected && moveFocus) t.focus();
+        });
+        const activeTab = cockpitTabs[activeIdx];
+        const targetId = activeTab ? activeTab.getAttribute("aria-controls") : null;
+        cockpitPanels.forEach(function (p) {
+          const isTarget = p.id === targetId;
+          p.hidden = !isTarget;
+          if (isTarget && useCssSwitchAnim) {
+            p.classList.remove("is-switching");
+            void p.offsetWidth;
+            p.classList.add("is-switching");
+          } else {
+            p.classList.remove("is-switching");
+          }
+        });
+      }
+
+      function activateCockpitTab(idx, moveFocus) {
+        const total = cockpitTabs.length;
+        if (!total) return;
+        const activeIdx = (idx + total) % total;
+        const currentSelected = document.querySelector('.cockpit-tab[aria-selected="true"]');
+        if (currentSelected === cockpitTabs[activeIdx]) {
+          if (moveFocus) cockpitTabs[activeIdx].focus();
+          return;
+        }
+
+        emitTelemetryPulse("mint");
+
+        if (
+          cockpitBody &&
+          typeof document.startViewTransition === "function" &&
+          !reducedMotion
+        ) {
+          if (activeCockpitVT && typeof activeCockpitVT.skipTransition === "function") {
+            try { activeCockpitVT.skipTransition(); } catch (e) {}
+          }
+          cockpitBody.style.viewTransitionName = "cockpit-panel";
+          const vt = document.startViewTransition(function () {
+            applyCockpitTabDOM(activeIdx, moveFocus, false);
+          });
+          activeCockpitVT = vt;
+          vt.finished.catch(function () {}).finally(function () {
+            if (activeCockpitVT === vt) {
+              cockpitBody.style.viewTransitionName = "";
+              activeCockpitVT = null;
+            }
+          });
+          return;
+        }
+
+        applyCockpitTabDOM(activeIdx, moveFocus, true);
+      }
+
+      cockpitTabs.forEach(function (tab, idx) {
         tab.addEventListener("click", function () {
-          const targetId = tab.getAttribute("aria-controls");
-          cockpitTabs.forEach(function (t) { t.setAttribute("aria-selected", "false"); });
-          cockpitPanels.forEach(function (p) { p.hidden = true; });
-          tab.setAttribute("aria-selected", "true");
-          const target = document.getElementById(targetId);
-          if (target) target.hidden = false;
+          activateCockpitTab(idx, false);
         });
       });
+      bindTablistKeyboard(cockpitTabs, activateCockpitTab);
 
-      // 3. Interactive capacity simulation in Clases panel
+      // 3 & 4. Unified capacity + athlete phone simulation (Sofía Peralta across Tab 1 & Tab 3)
       const simFeedback = document.getElementById("sim-feedback");
+      const sofiaCreditsEl = document.getElementById("sofia-credits");
+      const sofiaStatusEl = document.getElementById("sofia-booking-status");
+      const athleteBtn = document.getElementById("athlete-book-btn");
+      const athleteCredits = document.getElementById("athlete-credits-count");
+      const athleteSub = document.getElementById("athlete-booking-sub");
+      const athleteFeedback = document.getElementById("athlete-sim-feedback");
+      const baseSofiaCredits = 2;
+      const baseCounts = { funcional: 14, oly: 9 };
       const bookedState = { funcional: false, oly: false };
+
+      function syncClassRowUI(id) {
+        const btn = document.querySelector('[data-sim-toggle="' + id + '"]');
+        const row = btn ? btn.closest(".class-row") : null;
+        if (!btn || !row) return { booked: 0, cap: 0, title: "Clase" };
+        const cap = Number(row.getAttribute("data-cap"));
+        const isBooked = Boolean(bookedState[id]);
+        const booked = (baseCounts[id] || 0) + (isBooked ? 1 : 0);
+        const label = row.querySelector("[data-cap-label]");
+        const badge = row.querySelector("[data-status-badge]");
+        const title = row.querySelector(".class-meta-title")?.textContent || "Clase";
+
+        row.setAttribute("data-booked", String(booked));
+        if (label) {
+          label.textContent = booked + "/" + cap;
+          flashElement(label);
+        }
+        btn.textContent = isBooked ? "Cancelar reserva" : "Anotar a Sofía";
+        btn.classList.toggle("is-primary", !isBooked);
+
+        if (badge) {
+          if (booked >= cap) {
+            badge.className = "badge badge-coral";
+            badge.textContent = "Completo";
+          } else if (cap - booked <= 2) {
+            badge.className = "badge badge-amber";
+            badge.textContent = "Últimos lugares";
+          } else {
+            badge.className = "badge badge-mint";
+            badge.textContent = "Con lugar";
+          }
+          flashElement(badge);
+        }
+        return { booked: booked, cap: cap, title: title };
+      }
+
+      function syncSofiaAllViews() {
+        const used = (bookedState.funcional ? 1 : 0) + (bookedState.oly ? 1 : 0);
+        const remaining = Math.max(0, baseSofiaCredits - used);
+
+        if (sofiaCreditsEl) {
+          sofiaCreditsEl.textContent = remaining + " / 3";
+          sofiaCreditsEl.classList.toggle("is-updated", used > 0);
+          flashElement(sofiaCreditsEl);
+        }
+        if (sofiaStatusEl) {
+          if (used === 0) {
+            sofiaStatusEl.textContent = "Habilitada (2 créditos libres)";
+          } else if (used === 1) {
+            const turn = bookedState.funcional ? "18:00" : "20:00";
+            sofiaStatusEl.textContent = "Anotada hoy " + turn + " (queda 1 crédito)";
+          } else {
+            sofiaStatusEl.textContent = "Anotada 18:00 y 20:00 (0 créditos libres)";
+          }
+        }
+
+        if (athleteCredits) {
+          athleteCredits.textContent = remaining + " / 3";
+          athleteCredits.classList.toggle("is-updated", used > 0);
+          flashElement(athleteCredits);
+        }
+        if (athleteSub) {
+          athleteSub.textContent = bookedState.funcional
+            ? "Reservado (queda 1 de 16 cupos) · Cancelación sin cargo hasta 16:00"
+            : "Quedan 2 de 16 cupos · Cancelación sin cargo hasta 16:00";
+        }
+        if (athleteBtn) {
+          athleteBtn.textContent = bookedState.funcional ? "Cancelar en término" : "Reservar lugar";
+          athleteBtn.classList.toggle("is-primary", !bookedState.funcional);
+        }
+      }
 
       document.querySelectorAll("[data-sim-toggle]").forEach(function (btn) {
         btn.addEventListener("click", function () {
           const id = btn.getAttribute("data-sim-toggle");
-          const row = btn.closest(".class-row");
-          if (!row) return;
-          const cap = Number(row.getAttribute("data-cap"));
-          let booked = Number(row.getAttribute("data-booked"));
-          const label = row.querySelector("[data-cap-label]");
-          const badge = row.querySelector("[data-status-badge]");
-          const title = row.querySelector(".class-meta-title")?.textContent || "Clase";
+          if (!id || !(id in bookedState)) return;
+          bookedState[id] = !bookedState[id];
+          const info = syncClassRowUI(id);
+          syncSofiaAllViews();
+          const used = (bookedState.funcional ? 1 : 0) + (bookedState.oly ? 1 : 0);
+          const remaining = Math.max(0, baseSofiaCredits - used);
 
-          if (!bookedState[id]) {
-            if (booked >= cap) return;
-            booked += 1;
-            bookedState[id] = true;
-            btn.textContent = "Cancelar reserva";
-            btn.classList.remove("is-primary");
-            if (simFeedback) {
-              simFeedback.innerHTML = "<strong>Reserva en mostrador confirmada:</strong> " + title + " pasó a " + booked + "/" + cap + " cupos. Lugar y crédito descontados en el acto.";
-            }
-          } else {
-            booked -= 1;
-            bookedState[id] = false;
-            btn.textContent = "Anotar en mostrador";
-            btn.classList.add("is-primary");
-            if (simFeedback) {
-              simFeedback.innerHTML = "<strong>Reserva cancelada en término:</strong> se liberó el lugar en " + title + " (" + booked + "/" + cap + ") y se restituyó el crédito.";
+          if (simFeedback) {
+            if (bookedState[id]) {
+              simFeedback.innerHTML = "<strong>Sofía Peralta anotada en " + info.title + ":</strong> el cupo pasó a " + info.booked + "/" + info.cap + " y sus créditos semanales bajaron a " + remaining + "/3 (sin bloqueo por saldo pendiente).";
+            } else {
+              simFeedback.innerHTML = "<strong>Reserva de Sofía cancelada en término:</strong> se liberó el lugar en " + info.title + " (" + info.booked + "/" + info.cap + ") y volvió su crédito semanal (" + remaining + "/3).";
             }
           }
-
-          row.setAttribute("data-booked", String(booked));
-          if (label) label.textContent = booked + "/" + cap;
-          if (badge) {
-            if (booked >= cap) {
-              badge.className = "badge badge-coral";
-              badge.textContent = "Completo";
-            } else if (cap - booked <= 2) {
-              badge.className = "badge badge-amber";
-              badge.textContent = "Últimos lugares";
-            } else {
-              badge.className = "badge badge-mint";
-              badge.textContent = "Con lugar";
-            }
+          emitTelemetryPulse(bookedState[id] ? "volt" : "mint");
+          if (id === "funcional" && athleteFeedback) {
+            athleteFeedback.innerHTML = bookedState.funcional
+              ? "<strong>Sincronizado con mostrador:</strong> 18:00 Funcional quedó en 15/16 cupos y Sofía tiene " + remaining + "/3 créditos disponibles."
+              : "<strong>Cancelación sincronizada:</strong> el lugar en 18:00 Funcional volvió a 14/16 y Sofía tiene " + remaining + "/3 créditos disponibles.";
           }
         });
       });
 
-      // 4. Interactive athlete phone booking simulation
-      const athleteBtn = document.getElementById("athlete-book-btn");
-      const athleteCredits = document.getElementById("athlete-credits-count");
-      const athleteSub = document.getElementById("athlete-booking-sub");
-      let athleteBooked = false;
-      if (athleteBtn && athleteCredits && athleteSub) {
+      if (athleteBtn) {
         athleteBtn.addEventListener("click", function () {
-          athleteBooked = !athleteBooked;
-          if (athleteBooked) {
-            athleteCredits.textContent = "2";
-            athleteSub.textContent = "Reservado (quedan 2 de 16 cupos) · Cancelación sin cargo hasta 17:30";
-            athleteBtn.textContent = "Cancelar en término";
-            athleteBtn.classList.remove("is-primary");
-          } else {
-            athleteCredits.textContent = "3";
-            athleteSub.textContent = "Quedan 3 de 16 cupos · Cancelación sin cargo hasta 17:30";
-            athleteBtn.textContent = "Reservar lugar";
-            athleteBtn.classList.add("is-primary");
+          bookedState.funcional = !bookedState.funcional;
+          const info = syncClassRowUI("funcional");
+          syncSofiaAllViews();
+          const used = (bookedState.funcional ? 1 : 0) + (bookedState.oly ? 1 : 0);
+          const remaining = Math.max(0, baseSofiaCredits - used);
+
+          emitTelemetryPulse(bookedState.funcional ? "volt" : "mint");
+          if (athleteFeedback) {
+            athleteFeedback.innerHTML = bookedState.funcional
+              ? "<strong>Lugar reservado desde el celular:</strong> 18:00 Funcional quedó en " + info.booked + "/" + info.cap + " cupos y descontó 1 crédito semanal (" + remaining + "/3)."
+              : "<strong>Cancelación antes de las 16:00:</strong> el crédito regresó al instante (" + remaining + "/3) y el cupo volvió a " + info.booked + "/" + info.cap + ".";
+          }
+          if (simFeedback) {
+            simFeedback.innerHTML = bookedState.funcional
+              ? "<strong>Reserva desde el celular de Sofía:</strong> 18:00 Funcional pasó a " + info.booked + "/" + info.cap + " en la grilla de recepción (" + remaining + "/3 créditos)."
+              : "<strong>Cancelación desde el celular de Sofía:</strong> 18:00 Funcional volvió a " + info.booked + "/" + info.cap + " en recepción (" + remaining + "/3 créditos).";
           }
         });
       }
 
       // 5. #operacion Horizontal Slider + Interactive Rule Demos
+      const opsRail = document.getElementById("ops-rail");
       const opsTrack = document.getElementById("ops-track");
       const opsPillarBtns = document.querySelectorAll(".ops-pillar-btn");
+      const opsSlides = document.querySelectorAll(".ops-slide");
       const opsPrev = document.getElementById("ops-prev");
       const opsNext = document.getElementById("ops-next");
       const opsCounter = document.getElementById("ops-counter");
       let currentOps = 0;
       const totalOps = opsPillarBtns.length;
 
-      function setOpsSlide(idx) {
+      function setOpsSlide(idx, moveFocus) {
         currentOps = (idx + totalOps) % totalOps;
         if (opsTrack) {
           opsTrack.style.transform = "translateX(-" + (currentOps * 100) + "%)";
         }
         opsPillarBtns.forEach(function (b, i) {
-          b.setAttribute("aria-selected", String(i === currentOps));
+          const isSelected = i === currentOps;
+          b.setAttribute("aria-selected", String(isSelected));
+          b.setAttribute("tabindex", isSelected ? "0" : "-1");
+          if (isSelected) {
+            if (moveFocus) b.focus();
+            if (opsRail && opsRail.scrollWidth > opsRail.clientWidth) {
+              const targetLeft = Math.max(0, b.offsetLeft - (opsRail.clientWidth - b.offsetWidth) / 2);
+              opsRail.scrollTo({ left: targetLeft, behavior: reducedMotion ? "auto" : "smooth" });
+            }
+          }
+        });
+        opsSlides.forEach(function (slide, i) {
+          const isInactive = i !== currentOps;
+          slide.setAttribute("aria-hidden", String(isInactive));
+          if (isInactive) {
+            slide.setAttribute("inert", "");
+            slide.inert = true;
+          } else {
+            slide.removeAttribute("inert");
+            slide.inert = false;
+          }
         });
         if (opsCounter) opsCounter.textContent = (currentOps + 1) + " / " + totalOps;
       }
 
       opsPillarBtns.forEach(function (btn) {
         btn.addEventListener("click", function () {
-          setOpsSlide(Number(btn.getAttribute("data-ops-index")));
+          setOpsSlide(Number(btn.getAttribute("data-ops-index")), false);
         });
       });
-      if (opsPrev) opsPrev.addEventListener("click", function () { setOpsSlide(currentOps - 1); });
-      if (opsNext) opsNext.addEventListener("click", function () { setOpsSlide(currentOps + 1); });
+      bindTablistKeyboard(opsPillarBtns, setOpsSlide);
+      if (opsPrev) opsPrev.addEventListener("click", function () { setOpsSlide(currentOps - 1, false); });
+      if (opsNext) opsNext.addEventListener("click", function () { setOpsSlide(currentOps + 1, false); });
 
       // Mini-sim 1: Suspensión de clase
       const suspendBtn = document.getElementById("ops-suspend-btn");
@@ -2793,6 +3824,7 @@
             suspendBtn.textContent = "Simular suspensión de clase";
             suspendMsg.textContent = "14 atletas anotados con crédito consumido.";
           }
+          flashElement(classBadge);
         });
       }
 
@@ -2820,92 +3852,62 @@
             bajaBtn.textContent = "Simular baja anticipada";
             bajaMsg.textContent = "Las reservas posteriores se cancelan y liberan cupo al instante.";
           }
+          flashElement(memBadge);
+          flashElement(futureTag);
         });
       }
 
-      // Mini-sim 3: Coach attendance toggle
+      // Mini-sim 3: Coach attendance toggle (with status feedback)
+      const opsAttMsg = document.getElementById("ops-att-msg");
       document.querySelectorAll(".att-btn").forEach(function (btn) {
         btn.addEventListener("click", function () {
           const rowId = btn.getAttribute("data-att-row");
+          const athlete = btn.getAttribute("data-athlete") || "Atleta";
+          const state = btn.getAttribute("data-state") === "presente" ? "Presente" : "Ausente";
           document.querySelectorAll('.att-btn[data-att-row="' + rowId + '"]').forEach(function (peer) {
             peer.setAttribute("aria-pressed", String(peer === btn));
           });
-        });
-      });
-
-      // 6. Roles switcher
-      const rolesData = {
-        admin: {
-          title: "Administrador · Dueño o coordinador",
-          summary: "Tiene el control total del box: arma el catálogo de planes, tipos de clase y horarios, asigna permisos al equipo y audita cada movimiento de caja.",
-          boundary: "<strong>Cuenta única multi-sede:</strong> si administrás dos sucursales o entrenás en otro box que usa Centris, entrás con el mismo email y elegís el box activo al iniciar.",
-          items: [
-            "Configura nombre, zona horaria, anticipación de reserva y ventana de cancelación del box.",
-            "Crea planes, ajusta precios con becas o descuentos y ejecuta bajas anticipadas.",
-            "Anula pagos erróneos dejando motivo obligatorio y cancela clases devolviendo créditos."
-          ]
-        },
-        recep: {
-          title: "Recepcionista · Atención en mostrador",
-          summary: "Resuelve el flujo diario de la entrada sin tocar reglas estructurales: da de alta atletas, renueva membresías, cobra y controla morosos.",
-          boundary: "<strong>Separación clara:</strong> puede registrar pagos nuevos, pero no editar ni anular cobros previos ni cambiar el catálogo de precios base.",
-          items: [
-            "Da de alta atletas nuevos y renueva membresías desde planes activos sin solapar fechas.",
-            "Registra pagos totales o parciales, suma créditos extra y consulta el listado de morosos.",
-            "Anota reservas espontáneas en mostrador y ajusta puntualmente el cupo de una clase."
-          ]
-        },
-        coach: {
-          title: "Coach · Piso de entrenamiento",
-          summary: "Llega a dar la clase con la lista ordenada en el teléfono o tablet. Marca quién vino y puede corregir errores hasta 24 horas después.",
-          boundary: "<strong>Privacidad de caja:</strong> un coach sin rol de recepción ni administración nunca ve precios, membresías impagas, saldos ni historial de pagos.",
-          items: [
-            "Consulta únicamente sus clases asignadas y la nómina de atletas inscriptos.",
-            "Marca presentes o ausentes en un toque desde el piso de entrenamiento.",
-            "Rectifica asistencia dentro de las 24 horas posteriores al fin de la clase."
-          ]
-        },
-        atleta: {
-          title: "Atleta · Autogestión desde el celular",
-          summary: "Ve los horarios disponibles de su box, reserva su lugar antes de que se llene, cancela a tiempo si se complica el día y revisa su vigencia y saldo.",
-          boundary: "<strong>Sin bloqueos en puerta:</strong> mientras su membresía esté vigente y tenga créditos, puede reservar aunque deba regularizar un saldo en mostrador.",
-          items: [
-            "Activa su propia contraseña al primer ingreso si lo dio de alta recepción.",
-            "Reserva y cancela clases viendo al instante cuántos cupos reales quedan.",
-            "Consulta créditos disponibles, vencimiento de membresía y pagos registrados."
-          ]
-        }
-      };
-
-      const roleTabs = document.querySelectorAll(".role-tab");
-      const roleTitle = document.getElementById("role-title");
-      const roleSummary = document.getElementById("role-summary");
-      const roleBoundary = document.getElementById("role-boundary");
-      const roleList = document.getElementById("role-list");
-
-      const checkIconSvg = '<svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
-
-      roleTabs.forEach(function (tab) {
-        tab.addEventListener("click", function () {
-          const key = tab.getAttribute("data-role");
-          const data = rolesData[key];
-          if (!data) return;
-
-          roleTabs.forEach(function (t) { t.setAttribute("aria-selected", "false"); });
-          tab.setAttribute("aria-selected", "true");
-
-          if (roleTitle) roleTitle.textContent = data.title;
-          if (roleSummary) roleSummary.textContent = data.summary;
-          if (roleBoundary) roleBoundary.innerHTML = data.boundary;
-          if (roleList) {
-            roleList.innerHTML = data.items.map(function (item) {
-              return "<li>" + checkIconSvg + "<span>" + item + "</span></li>";
-            }).join("");
+          flashElement(btn);
+          if (opsAttMsg) {
+            opsAttMsg.textContent = athlete + " marcado como " + state + " · editable durante las próximas 18h 20m.";
           }
         });
       });
 
-      // 7. FAQ Accordion
+      // Mini-sim 4: Caja immutable audit simulation
+      const auditBtn = document.getElementById("ops-audit-btn");
+      const auditRow1 = document.getElementById("ops-audit-row-1");
+      const auditSub1 = document.getElementById("ops-audit-sub-1");
+      const auditTag1 = document.getElementById("ops-audit-tag-1");
+      const auditRow2 = document.getElementById("ops-audit-row-2");
+      const auditMsg = document.getElementById("ops-audit-msg");
+      let auditSimulated = false;
+      if (auditBtn && auditRow1 && auditSub1 && auditTag1 && auditRow2 && auditMsg) {
+        auditBtn.addEventListener("click", function () {
+          auditSimulated = !auditSimulated;
+          if (auditSimulated) {
+            auditRow1.classList.add("is-voided");
+            auditSub1.textContent = 'Motivo anulación: "Importe duplicado en mostrador"';
+            auditTag1.className = "badge badge-coral";
+            auditTag1.textContent = "Anulado (Admin)";
+            auditRow2.hidden = false;
+            auditBtn.textContent = "Restablecer simulación";
+            auditMsg.textContent = "El cobro #1041 quedó anulado con motivo y autoría, y se asentó #1042 firme.";
+            flashElement(auditRow2);
+          } else {
+            auditRow1.classList.remove("is-voided");
+            auditSub1.textContent = "Efectivo · Cargado por error en mostrador";
+            auditTag1.className = "badge badge-mint";
+            auditTag1.textContent = "Firme";
+            auditRow2.hidden = true;
+            auditBtn.textContent = "Simular anulación con motivo";
+            auditMsg.textContent = "Los cobros no se borran: probá cómo corrige un error un Administrador.";
+          }
+          flashElement(auditTag1);
+        });
+      }
+
+      // 6. FAQ Accordion
       document.querySelectorAll(".faq-trigger").forEach(function (trigger) {
         trigger.addEventListener("click", function () {
           const expanded = trigger.getAttribute("aria-expanded") === "true";
@@ -2916,12 +3918,43 @@
         });
       });
 
-      // 8. Demo form inline validation and confirmation
+      // 7. Demo form validation, live error recovery, XSS-safe summary & copy action
       const form = document.getElementById("demo-form");
       const boxInput = document.getElementById("box-name");
       const nameInput = document.getElementById("contact-name");
       const channelInput = document.getElementById("contact-channel");
+      const athleteSelect = document.getElementById("athlete-count");
+      const needInput = document.getElementById("main-need");
+      const submitBtn = document.getElementById("demo-submit-btn");
       const feedback = document.getElementById("form-feedback");
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      const phoneAllowedRegex = /^[+\d\s().-]+$/;
+
+      function validateBoxValue(val) {
+        const trimmed = val.trim();
+        if (!trimmed) return "Ingresá el nombre de tu box o centro.";
+        if (trimmed.length < 2) return "El nombre del box debe tener al menos 2 caracteres.";
+        return "";
+      }
+
+      function validateNameValue(val) {
+        const trimmed = val.trim();
+        if (!trimmed) return "Ingresá tu nombre para poder contactarte.";
+        if (trimmed.length < 2) return "Ingresá un nombre válido (mínimo 2 caracteres).";
+        return "";
+      }
+
+      function validateChannelValue(val) {
+        const trimmed = val.trim();
+        if (!trimmed) return "Ingresá un email o número de WhatsApp de contacto.";
+        if (emailRegex.test(trimmed)) return "";
+        const digitsOnly = trimmed.replace(/\D/g, "");
+        if (phoneAllowedRegex.test(trimmed) && digitsOnly.length >= 8 && digitsOnly.length <= 15) {
+          return "";
+        }
+        return "Ingresá un email válido (ej. hola@tubox.com) o un WhatsApp con código de área (mínimo 8 dígitos).";
+      }
 
       function setFieldError(input, errId, message) {
         const errEl = document.getElementById(errId);
@@ -2935,21 +3968,443 @@
         return true;
       }
 
+      if (boxInput) {
+        boxInput.addEventListener("input", function () {
+          if (boxInput.getAttribute("aria-invalid") === "true") {
+            setFieldError(boxInput, "err-box-name", validateBoxValue(boxInput.value));
+          }
+        });
+      }
+      if (nameInput) {
+        nameInput.addEventListener("input", function () {
+          if (nameInput.getAttribute("aria-invalid") === "true") {
+            setFieldError(nameInput, "err-contact-name", validateNameValue(nameInput.value));
+          }
+        });
+      }
+      if (channelInput) {
+        channelInput.addEventListener("input", function () {
+          if (channelInput.getAttribute("aria-invalid") === "true") {
+            setFieldError(channelInput, "err-contact-channel", validateChannelValue(channelInput.value));
+          }
+        });
+      }
+
       if (form && boxInput && nameInput && channelInput && feedback) {
         form.addEventListener("submit", function (event) {
           event.preventDefault();
-          feedback.hidden = true;
 
-          const validBox = setFieldError(boxInput, "err-box-name", boxInput.value.trim() ? "" : "Ingresá el nombre de tu box o centro.");
-          const validName = setFieldError(nameInput, "err-contact-name", nameInput.value.trim() ? "" : "Ingresá tu nombre para poder contactarte.");
-          const validChannel = setFieldError(channelInput, "err-contact-channel", channelInput.value.trim().length >= 5 ? "" : "Ingresá un email o WhatsApp válido.");
+          const errBox = validateBoxValue(boxInput.value);
+          const errName = validateNameValue(nameInput.value);
+          const errChannel = validateChannelValue(channelInput.value);
 
-          if (!validBox || !validName || !validChannel) {
+          const validBox = setFieldError(boxInput, "err-box-name", errBox);
+          const validName = setFieldError(nameInput, "err-contact-name", errName);
+          const validChannel = setFieldError(channelInput, "err-contact-channel", errChannel);
+
+          if (!validBox) {
+            boxInput.focus();
+            return;
+          }
+          if (!validName) {
+            nameInput.focus();
+            return;
+          }
+          if (!validChannel) {
+            channelInput.focus();
             return;
           }
 
-          feedback.innerHTML = "<strong>Solicitud lista para " + boxInput.value.trim() + ":</strong> preparamos la demo con tus horarios y planes para " + nameInput.value.trim() + " (" + channelInput.value.trim() + ").";
+          const boxVal = boxInput.value.trim();
+          const nameVal = nameInput.value.trim();
+          const channelVal = channelInput.value.trim();
+          const scaleLabel = athleteSelect && athleteSelect.selectedOptions[0]
+            ? athleteSelect.selectedOptions[0].textContent
+            : "Entre 80 y 200 atletas";
+          const needVal = needInput && needInput.value.trim()
+            ? needInput.value.trim()
+            : "Ordenar grilla de clases, reservas y caja diaria.";
+
+          const summaryText = [
+            "Solicitud de demo Centris (20 min)",
+            "• Box / Centro: " + boxVal,
+            "• Contacto: " + nameVal + " (" + channelVal + ")",
+            "• Escala actual: " + scaleLabel,
+            "• Prioridad operativa: " + needVal
+          ].join("\n");
+
+          feedback.textContent = "";
+
+          const titleLine = document.createElement("div");
+          const strongEl = document.createElement("strong");
+          strongEl.textContent = "Resumen de demo preparado para " + boxVal + ": ";
+          titleLine.appendChild(strongEl);
+          titleLine.appendChild(document.createTextNode("como este entorno es de demostración local (sin envío a servidor), podés copiar el resumen listo a continuación:"));
+
+          const preEl = document.createElement("pre");
+          preEl.className = "form-feedback-summary";
+          preEl.textContent = summaryText;
+
+          const actionsRow = document.createElement("div");
+          actionsRow.className = "form-feedback-actions";
+
+          const copyBtn = document.createElement("button");
+          copyBtn.type = "button";
+          copyBtn.className = "sim-action-btn is-primary";
+          copyBtn.id = "copy-demo-summary";
+          copyBtn.textContent = "Copiar resumen de solicitud";
+
+          const copyStatus = document.createElement("span");
+          copyStatus.className = "ops-action-msg";
+          copyStatus.setAttribute("aria-live", "polite");
+
+          copyBtn.addEventListener("click", function () {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(summaryText).then(function () {
+                copyBtn.textContent = "Resumen copiado";
+                copyStatus.textContent = "Listo en tu portapapeles para pegarlo por WhatsApp o email.";
+              }).catch(function () {
+                copyStatus.textContent = "Seleccioná el recuadro de arriba para copiar el texto.";
+              });
+            } else {
+              copyStatus.textContent = "Seleccioná el recuadro de arriba para copiar el texto.";
+            }
+          });
+
+          actionsRow.appendChild(copyBtn);
+          actionsRow.appendChild(copyStatus);
+
+          feedback.appendChild(titleLine);
+          feedback.appendChild(preEl);
+          feedback.appendChild(actionsRow);
           feedback.hidden = false;
+
+          if (submitBtn) {
+            submitBtn.textContent = "Actualizar resumen de demo";
+          }
+          flashElement(feedback);
+        });
+      }
+
+      // 8. Overdrive Reactive Telemetry Canvas 2D + Scroll Depth Fallback + One-Shot Scroll Reveal
+      const heroSection = document.querySelector(".hero");
+      const heroCopyEl = document.querySelector(".hero-copy");
+      const telemetryCanvas = document.getElementById("hero-telemetry-canvas");
+
+      if (heroSection && telemetryCanvas && telemetryCanvas.getContext) {
+        const ctx = telemetryCanvas.getContext("2d");
+        let width = 0;
+        let height = 0;
+        let dpr = 1;
+        let rafId = null;
+        let heroVisible = true;
+        let pointerActive = false;
+        let targetX = 0.5;
+        let targetY = 0.28;
+        let currentX = 0.5;
+        let currentY = 0.28;
+        let copyZone = { cx: 0, cy: 0, rx: 1, ry: 1 };
+        const pulses = [];
+
+        function getThemePalette() {
+          const isLight = document.documentElement.classList.contains("light");
+          return isLight
+            ? {
+                dot: "rgba(82, 82, 91, 0.22)",
+                cross: "rgba(63, 98, 18, 0.28)",
+                volt: "rgba(63, 98, 18, ",
+                mint: "rgba(4, 120, 87, "
+              }
+            : {
+                dot: "rgba(161, 161, 170, 0.15)",
+                cross: "rgba(193, 244, 41, 0.22)",
+                volt: "rgba(193, 244, 41, ",
+                mint: "rgba(24, 255, 200, "
+              };
+        }
+
+        function resizeCanvas() {
+          const rect = heroSection.getBoundingClientRect();
+          if (!rect.width || !rect.height) return;
+          dpr = Math.min(window.devicePixelRatio || 1, 2);
+          width = Math.round(rect.width);
+          height = Math.round(rect.height);
+          telemetryCanvas.width = Math.round(width * dpr);
+          telemetryCanvas.height = Math.round(height * dpr);
+          if (heroCopyEl) {
+            const cRect = heroCopyEl.getBoundingClientRect();
+            copyZone = {
+              cx: cRect.left - rect.left + cRect.width * 0.5,
+              cy: cRect.top - rect.top + cRect.height * 0.5,
+              rx: Math.max(180, cRect.width * 0.56),
+              ry: Math.max(120, cRect.height * 0.64)
+            };
+          }
+        }
+
+        function getReadingZoneFactor(x, y) {
+          const nx = (x - copyZone.cx) / copyZone.rx;
+          const ny = (y - copyZone.cy) / copyZone.ry;
+          const d = nx * nx + ny * ny;
+          if (d >= 1.25) return 1;
+          if (d <= 0.45) return 0.06;
+          return 0.06 + ((d - 0.45) / 0.8) * 0.94;
+        }
+
+        emitTelemetryPulse = function (tone) {
+          if (reducedMotion || !width || !height) return;
+          pulses.push({
+            x: width * 0.5,
+            y: Math.min(height * 0.54, 420),
+            radius: 28,
+            maxRadius: Math.max(width, height) * 0.62,
+            alpha: 0.72,
+            tone: tone === "mint" ? "mint" : "volt"
+          });
+          if (pulses.length > 4) pulses.shift();
+        };
+
+        function drawTelemetryFrame(nowMs) {
+          if (!ctx || !width || !height) return;
+          const t = (nowMs || 0) * 0.001;
+          const palette = getThemePalette();
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          ctx.clearRect(0, 0, width, height);
+
+          // Ease pointer inertia
+          const ease = pointerActive ? 0.12 : 0.04;
+          if (!pointerActive && !reducedMotion) {
+            targetX = 0.5 + Math.sin(t * 0.35) * 0.14;
+            targetY = 0.26 + Math.cos(t * 0.27) * 0.06;
+          }
+          currentX += (targetX - currentX) * ease;
+          currentY += (targetY - currentY) * ease;
+
+          const px = currentX * width;
+          const py = currentY * height;
+          const spacing = width < 640 ? 32 : 38;
+          const influenceR = width < 640 ? 180 : 250;
+
+          // Update radial pulse waves
+          for (let i = pulses.length - 1; i >= 0; i--) {
+            const p = pulses[i];
+            p.radius += (p.maxRadius - p.radius) * 0.065 + 3.2;
+            p.alpha *= 0.962;
+            if (p.alpha < 0.02 || p.radius >= p.maxRadius) {
+              pulses.splice(i, 1);
+            }
+          }
+
+          // Draw subtle radial pulse rings
+          for (let i = 0; i < pulses.length; i++) {
+            const p = pulses[i];
+            const colorBase = p.tone === "mint" ? palette.mint : palette.volt;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.strokeStyle = colorBase + (p.alpha * 0.42).toFixed(3) + ")";
+            ctx.lineWidth = 1.4;
+            ctx.stroke();
+          }
+
+          // Architectural lattice nodes + cursor / pulse illumination
+          const cols = Math.ceil(width / spacing);
+          const rows = Math.ceil(height / spacing);
+          const offsetX = (width - cols * spacing) * 0.5 + spacing * 0.5;
+
+          for (let r = 0; r <= rows; r++) {
+            const y = r * spacing + 18;
+            if (y > height * 0.92) break;
+            for (let c = 0; c <= cols; c++) {
+              const x = offsetX + c * spacing;
+              const dx = x - px;
+              const dy = y - py;
+              const dist = Math.hypot(dx, dy);
+              const cursorEnergy = Math.max(0, 1 - dist / influenceR);
+
+              let waveEnergy = 0;
+              let waveTone = "volt";
+              for (let k = 0; k < pulses.length; k++) {
+                const p = pulses[k];
+                const dPulse = Math.abs(Math.hypot(x - p.x, y - p.y) - p.radius);
+                if (dPulse < 52) {
+                  const contrib = (1 - dPulse / 52) * p.alpha;
+                  if (contrib > waveEnergy) {
+                    waveEnergy = contrib;
+                    waveTone = p.tone;
+                  }
+                }
+              }
+
+              const ambientBeat = reducedMotion ? 0 : Math.max(0, Math.sin(t * 1.4 + c * 0.45 + r * 0.35)) * 0.18;
+              const isAnchor = (c % 4 === 0 && r % 3 === 0);
+              const zoneFactor = getReadingZoneFactor(x, y);
+
+              if (waveEnergy > 0.08 && zoneFactor > 0.25) {
+                const colorPrefix = waveTone === "mint" ? palette.mint : palette.volt;
+                ctx.fillStyle = colorPrefix + Math.min(0.85, (0.25 + waveEnergy * 0.7) * zoneFactor).toFixed(3) + ")";
+                const sz = 1.4 + waveEnergy * 1.8;
+                ctx.fillRect(x - sz * 0.5, y - sz * 0.5, sz, sz);
+              } else if (cursorEnergy > 0.04 && zoneFactor > 0.2) {
+                ctx.fillStyle = palette.volt + ((0.18 + cursorEnergy * 0.55) * zoneFactor).toFixed(3) + ")";
+                const rNode = 1.2 + cursorEnergy * 1.5;
+                ctx.beginPath();
+                ctx.arc(x, y, rNode, 0, Math.PI * 2);
+                ctx.fill();
+              } else if (isAnchor) {
+                ctx.globalAlpha = zoneFactor;
+                ctx.strokeStyle = palette.cross;
+                ctx.lineWidth = 1;
+                const arm = 2.6 + ambientBeat * 2.2;
+                ctx.beginPath();
+                ctx.moveTo(x - arm, y);
+                ctx.lineTo(x + arm, y);
+                ctx.moveTo(x, y - arm);
+                ctx.lineTo(x, y + arm);
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+              } else {
+                ctx.globalAlpha = zoneFactor;
+                ctx.fillStyle = palette.dot;
+                ctx.fillRect(x - 0.8, y - 0.8, 1.6, 1.6);
+                ctx.globalAlpha = 1;
+              }
+            }
+          }
+        }
+
+        function tick(now) {
+          drawTelemetryFrame(now);
+          if (heroVisible && !document.hidden && !reducedMotion) {
+            rafId = window.requestAnimationFrame(tick);
+          } else {
+            rafId = null;
+          }
+        }
+
+        function ensureLoop() {
+          if (reducedMotion) {
+            drawTelemetryFrame(0);
+            return;
+          }
+          if (!rafId && heroVisible && !document.hidden) {
+            rafId = window.requestAnimationFrame(tick);
+          }
+        }
+
+        resizeCanvas();
+        ensureLoop();
+
+        window.addEventListener("resize", function () {
+          resizeCanvas();
+          if (reducedMotion) drawTelemetryFrame(0);
+        }, { passive: true });
+
+        if (!reducedMotion) {
+          heroSection.addEventListener("pointermove", function (e) {
+            const rect = heroSection.getBoundingClientRect();
+            if (rect.width > 0 && rect.height > 0) {
+              pointerActive = true;
+              targetX = Math.max(0.05, Math.min(0.95, (e.clientX - rect.left) / rect.width));
+              targetY = Math.max(0.05, Math.min(0.88, (e.clientY - rect.top) / rect.height));
+              heroSection.style.setProperty("--hero-x", Math.round(targetX * 100) + "%");
+              heroSection.style.setProperty("--hero-y", Math.round(targetY * 100) + "%");
+            }
+          }, { passive: true });
+
+          heroSection.addEventListener("pointerleave", function () {
+            pointerActive = false;
+          }, { passive: true });
+        }
+
+        if ("IntersectionObserver" in window) {
+          const heroObs = new IntersectionObserver(function (entries) {
+            heroVisible = Boolean(entries[0] && entries[0].isIntersecting);
+            if (heroVisible) ensureLoop();
+          }, { threshold: 0.02 });
+          heroObs.observe(heroSection);
+        }
+
+        document.addEventListener("visibilitychange", function () {
+          if (!document.hidden && heroVisible) ensureLoop();
+        });
+
+        if (window.MutationObserver) {
+          new MutationObserver(function () {
+            if (reducedMotion) drawTelemetryFrame(0);
+          }).observe(rootEl, { attributes: true, attributeFilter: ["class"] });
+        }
+      }
+
+      // Scroll-progress fallback only when native CSS scroll-timeline is unsupported
+      const scrollProgressEl = document.getElementById("scroll-progress-fill");
+      if (scrollProgressEl && !(window.CSS && CSS.supports && CSS.supports("animation-timeline: scroll()"))) {
+        let scrollRaf = false;
+        function updateScrollProgress() {
+          scrollRaf = false;
+          const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+          const ratio = Math.max(0, Math.min(1, window.scrollY / maxScroll));
+          scrollProgressEl.style.setProperty("--scroll-progress", ratio.toFixed(4));
+        }
+        window.addEventListener("scroll", function () {
+          if (!scrollRaf) {
+            scrollRaf = true;
+            window.requestAnimationFrame(updateScrollProgress);
+          }
+        }, { passive: true });
+        updateScrollProgress();
+      }
+
+      if ("IntersectionObserver" in window && !reducedMotion) {
+        const staggerContainers = document.querySelectorAll(".scenes-grid, .roles-grid, .modality-grid, .scope-split, .faq-list");
+        staggerContainers.forEach(function (grid) {
+          Array.prototype.slice.call(grid.children).forEach(function (child, idx) {
+            child.style.setProperty("--stagger", String(Math.min(idx, 3)));
+          });
+        });
+
+        const revealSelectors = [
+          ".section-header",
+          ".scenes-grid > .scene-card",
+          ".ops-controls-bar",
+          ".ops-viewport",
+          ".roles-grid > .role-card",
+          ".roles-shared-note",
+          ".modality-grid > .modality-card",
+          ".scope-split > .panel-surface",
+          ".faq-list > .faq-item",
+          ".demo-layout"
+        ].join(", ");
+
+        const revealTargets = document.querySelectorAll(revealSelectors);
+        const viewportFloor = window.innerHeight * 0.94;
+
+        const revealObserver = new IntersectionObserver(function (entries, obs) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            const el = entry.target;
+            obs.unobserve(el);
+            if (el.getAttribute("data-reveal") === "pending") {
+              el.setAttribute("data-reveal", "entering");
+              el.addEventListener("animationend", function () {
+                el.setAttribute("data-reveal", "shown");
+              }, { once: true });
+            } else {
+              el.setAttribute("data-reveal", "shown");
+            }
+          });
+        }, {
+          threshold: 0.12,
+          rootMargin: "0px 0px -36px 0px"
+        });
+
+        revealTargets.forEach(function (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top > viewportFloor) {
+            el.setAttribute("data-reveal", "pending");
+            revealObserver.observe(el);
+          } else {
+            el.setAttribute("data-reveal", "shown");
+          }
         });
       }
     })();
